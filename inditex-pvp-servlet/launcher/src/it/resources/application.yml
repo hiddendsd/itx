@@ -1,0 +1,3 @@
+spring:
+  flyway:
+    locations: /db/migrations/common,/db/migrations/test
