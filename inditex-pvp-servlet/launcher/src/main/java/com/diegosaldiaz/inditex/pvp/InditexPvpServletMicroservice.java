@@ -1,13 +1,14 @@
 package com.diegosaldiaz.inditex.pvp;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 /**
- * Hello world!
- *
+ * Inditex PVP Servlet Microservice.
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
+@SpringBootApplication
+public class InditexPvpServletMicroservice {
+  public static void main( String[] args ) {
+    SpringApplication.run(InditexPvpServletMicroservice.class, args);
+  }
 }
