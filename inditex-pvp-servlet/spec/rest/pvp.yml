@@ -1,0 +1,153 @@
+openapi: 3.0.3
+info:
+  title: Inditex PVP API
+  description: This API provides access to Inditex's PVP management microservice.
+  contact:
+    email: info@diegosaldiaz.com
+  version: 1.0.11
+servers:
+  - url: https://localhost/api/v1
+tags:
+  - name: pvp
+    description: Public Price Related Endpoints
+  - name: product
+    description: Product related endpoint
+
+paths:
+
+  /brands/{brandId}/products/{productId}/prices/pvp:
+    get:
+      tags:
+        - pvp
+        - product
+      summary: Product PVP
+      description: Get product PVP for a given brand in a given date
+      operationId: getPvp
+      parameters:
+        - name: brandId
+          in: path
+          description: Brand Identifier
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 1
+        - name: productId
+          in: path
+          description: Product Identifier
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 0
+            example: 35455
+        - name: date
+          description: Pvp date
+          in: query
+          schema:
+            type: string
+            format: date-time
+            example: '2020-11-26T00:00:00Z'
+          required: true
+      responses:
+        200:
+          $ref: '#/components/responses/GetPvpResponse'
+        400:
+          $ref: '#/components/responses/400BadRequestError'
+        404:
+          $ref: '#/components/responses/404NotFoundError'
+        default:
+          $ref: '#/components/responses/500InternalServerError'
+
+components:
+  schemas:
+    Pvp:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          minimum: 1
+          example: 35455
+        brandId:
+          type: integer
+          minimum: 1
+          example: 1
+        priceList:
+          type: integer
+          minimum: 1
+          example: 12
+        pvp:
+          type: number
+          format: double
+          example: 29.99
+        currency:
+          type: string
+          enum:
+            - EUR
+          example: EUR
+        validFrom:
+          type: string
+          format: date-time
+          example: '2020-11-26T00:00:00Z'
+        validTo:
+          type: string
+          format: date-time
+          example: '2020-11-26T00:00:00Z'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code
+          example: ITX-001
+        message:
+          type: string
+          description: Error message
+          example: Price not found
+        retryable:
+          type: boolean
+          description: |- 
+            Whether is retryable or not.
+            - true: The request can be sent again. The issue might be temporal, or whatever you need maybe is available in the future.
+            For instance: third party down. 
+            - false: There is no option for that request to return a success response, so do not re-try. 
+            For instance: invoking an endpoint that doesn't exists.
+          example: true
+
+
+
+
+  responses:
+    GetPvpResponse:
+      description: Get the PVP
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: '#/components/schemas/Pvp'
+
+    400BadRequestError:
+      description: Bad Request Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    404NotFoundError:
+      description: Resource Not Found Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    500InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
