@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: itx-pvp-reactive
+
+  r2dbc:
+    url: ${R2DBC_URI}
+
+  flyway:
+    url: ${JDBC_URI}
+    baseline-on-migrate: true
+    locations: classpath:/db/migrations/common,classpath:/db/migrations/${ENV:pro}
+
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT}
+    com.diegosaldiaz.itx.pvp: ${LOG_LEVEL_ITX_PVP}
+    org.springframework: ${LOG_LEVEL_SPRING_FRAMEWORK}
+    org.hibernate.SQL: ${LOG_LEVEL_HIBERNATE_SQL}
+    org.hibernate.type.descriptor.sql.BasicBinder: ${LOG_LEVEL_HIBERNATE_BASIC_BINDER}
