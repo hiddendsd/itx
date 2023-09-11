@@ -3,12 +3,18 @@ spring:
     name: itx-pvp-reactive
 
   r2dbc:
-    url: ${R2DBC_URI}
+    # url: ${R2DBC_URI}
+    url: r2dbc:h2:file:///./tmp/inditex
 
   flyway:
-    url: ${JDBC_URI}
+    # url: ${JDBC_URI}
+    url: jdbc:h2:file:./tmp/inditex
     baseline-on-migrate: true
     locations: classpath:/db/migrations/common,classpath:/db/migrations/${ENV:pro}
+
+r2dbc:
+  migrate:
+    resources-paths: classpath:/db/migrations/common/*.sql
 
 logging:
   level:

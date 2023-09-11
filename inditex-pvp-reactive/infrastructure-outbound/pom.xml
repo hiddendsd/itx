@@ -13,6 +13,21 @@
     <name>infrastructure-outbound</name>
 
     <dependencies>
+        <dependency>
+            <groupId>com.diegosaldiaz.inditex.pvp.reactive</groupId>
+            <artifactId>application</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -27,10 +42,6 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework</groupId>-->
-<!--            <artifactId>spring-jdbc</artifactId>-->
-<!--        </dependency>-->
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -43,5 +54,15 @@
             <scope>runtime</scope>
         </dependency>
 
+<!--                <dependency>-->
+<!--                    <groupId>org.springframework</groupId>-->
+<!--                    <artifactId>spring-jdbc</artifactId>-->
+<!--                </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>name.nkonev.r2dbc-migrate</groupId>-->
+<!--            <artifactId>r2dbc-migrate-spring-boot-starter</artifactId>-->
+<!--            <version>2.10.3</version>-->
+<!--        </dependency>-->
     </dependencies>
 </project>

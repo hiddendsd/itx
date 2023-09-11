@@ -13,3 +13,4 @@ create table if not exists price
 
 create index if not exists price_product_index on price (product_id);
 
+
