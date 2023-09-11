@@ -1,4 +1,4 @@
-package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.mapper;
+package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.rest.mapper;
 
 import com.diegosaldiaz.inditex.pvp.application.domain.model.Price;
 import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.PvpDto;

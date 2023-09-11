@@ -1,8 +1,9 @@
-package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.controller;
+package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.rest.controller;
 
 import com.diegosaldiaz.inditex.pvp.application.port.inbound.GetPvpUseCasePort;
+import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.controller.PvpApi;
 import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.GetPvp200ResponseDto;
-import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.mapper.PriceDomainModelToDtoMapper;
+import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.rest.mapper.PriceDomainModelToDtoMapper;
 import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

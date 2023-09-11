@@ -1,4 +1,4 @@
-package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.controller;
+package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.rest.controller;
 
 import com.diegosaldiaz.inditex.pvp.application.exception.PriceNotFoundException;
 import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.ErrorDto;

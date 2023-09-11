@@ -1,9 +1,9 @@
-package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.controller;
+package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.rest.controller;
 
 import com.diegosaldiaz.inditex.pvp.application.domain.model.Price;
 import com.diegosaldiaz.inditex.pvp.application.port.inbound.GetPvpUseCasePort;
 import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.PvpDto;
-import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.mapper.PriceDomainModelToDtoMapper;
+import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.rest.mapper.PriceDomainModelToDtoMapper;
 import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

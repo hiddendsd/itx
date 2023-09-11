@@ -1,5 +1,8 @@
-package com.diegosaldiaz.inditex.pvp;
+package com.diegosaldiaz.inditex.pvp.infrastructure.outbound.h2.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import com.diegosaldiaz.inditex.pvp.BaseIT;
+import com.diegosaldiaz.inditex.pvp.InditexPvpServletMicroservice;
 import com.diegosaldiaz.inditex.pvp.infrastructure.outbound.h2.repository.PriceRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -11,13 +14,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@AutoConfigureTestDatabase
-@SpringBootTest(classes = InditexPvpServletMicroservice.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-class PriceRepositoryIT {
+
+class PriceRepositoryIT extends BaseIT {
   private static final int BRAND_ID = 1;
   private static final long PRODUCT_ID = 35455;
   private static final LocalDateTime START_DATE = LocalDateTime.of(2020,6,14,0,0,0);
