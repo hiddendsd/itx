@@ -1,2 +1,6 @@
 <FindBugsFilter>
+    <Match>
+        <Class name="com.diegosaldiaz.inditex.pvp.application.exception.InditexPvpServletException" />
+        <Bug pattern="FORMAT_STRING_MANIPULATION" />
+    </Match>
 </FindBugsFilter>

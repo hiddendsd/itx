@@ -5,6 +5,7 @@ import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.ErrorDto;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Path;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,9 +33,13 @@ class AdviseControllerTest {
 
   @Test
   void testPriceNotFoundHandler() {
-    ResponseEntity<ErrorDto> response = controller.handlePriceNotFound(new PriceNotFoundException(), webRequest);
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    // TODO assertEquals(MSG, response.getBody().getMessage());
+    ResponseEntity<ErrorDto> response = controller.handlePriceNotFound(new PriceNotFoundException(1, 2, LocalDateTime.now()), webRequest);
+    var errorDto =response.getBody();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    assertThat(errorDto.getMessage()).contains("Price not found error for Brand [1] Product [2] date[");
+    assertThat(errorDto.getCode()).isEqualTo("ITX-001");
+    assertThat(errorDto.getRetryable()).isTrue();
   }
 
   @Test
@@ -47,8 +53,11 @@ class AdviseControllerTest {
 
     ResponseEntity<ErrorDto> response = controller.handleMethodArgumentNotValidException(exception, webRequest);
 
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals(String.format("'%s': %s. ", fieldName, errorMsg), response.getBody().getMessage());
+    var errorDto =response.getBody();
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(errorDto.getMessage()).isEqualTo(String.format("'%s': %s. ", fieldName, errorMsg));
+    assertThat(errorDto.getCode()).isEqualTo("V-003");
+    assertThat(errorDto.getRetryable()).isFalse();
   }
 
   @Test
@@ -62,8 +71,12 @@ class AdviseControllerTest {
 
     ResponseEntity<ErrorDto> response = controller.handleMethodArgumentNotValidException(exception, webRequest);
 
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals(String.format("'%s': %s. ", objectName, errorMsg), response.getBody().getMessage());
+    var errorDto =response.getBody();
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(errorDto.getMessage()).isEqualTo(String.format("'%s': %s. ", objectName, errorMsg));
+    assertThat(errorDto.getCode()).isEqualTo("V-003");
+    assertThat(errorDto.getRetryable()).isFalse();
+
   }
 
   @Test
@@ -78,6 +91,12 @@ class AdviseControllerTest {
     ResponseEntity<ErrorDto> response = controller.handleConstraintViolationException(exception, webRequest);
     assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     assertEquals("'field': error. ", response.getBody().getMessage());
+
+    var errorDto =response.getBody();
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(errorDto.getMessage()).isEqualTo("'field': error. ");
+    assertThat(errorDto.getCode()).isEqualTo("V-001");
+    assertThat(errorDto.getRetryable()).isFalse();
   }
 
   /*

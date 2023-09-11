@@ -35,6 +35,6 @@ public class GetPvpService implements GetPvpUseCasePort {
   @Override
   public Price apply(final int brandId, final long productId, final LocalDateTime date) {
     return getPvpPort.apply(brandId, productId, date)
-        .orElseThrow(PriceNotFoundException::new);
+        .orElseThrow(() -> new PriceNotFoundException(brandId, productId, date));
   }
 }

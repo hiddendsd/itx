@@ -117,9 +117,6 @@ components:
             For instance: invoking an endpoint that doesn't exists.
           example: true
 
-
-
-
   responses:
     GetPvpResponse:
       description: Get the PVP
