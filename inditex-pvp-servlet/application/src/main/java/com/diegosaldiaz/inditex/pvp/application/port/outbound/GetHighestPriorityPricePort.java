@@ -1,7 +1,7 @@
 package com.diegosaldiaz.inditex.pvp.application.port.outbound;
 
 import com.diegosaldiaz.inditex.pvp.application.domain.model.Price;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 /**
@@ -12,5 +12,5 @@ import java.util.Optional;
 @FunctionalInterface
 public interface GetHighestPriorityPricePort {
 
-  Optional<Price> apply(int brandId, long productId, Instant date);
+  Optional<Price> apply(int brandId, long productId, LocalDateTime date);
 }

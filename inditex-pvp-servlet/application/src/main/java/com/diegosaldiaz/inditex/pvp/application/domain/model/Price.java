@@ -1,7 +1,7 @@
 package com.diegosaldiaz.inditex.pvp.application.domain.model;
 
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * Price Entity.
@@ -15,8 +15,8 @@ import java.time.Instant;
  * @param price BigDecimal with the amount of money
  * @param currency String with the currency
  */
-public record Price(int brandId, long productId, Instant validFrom, Instant validTo, long priceListId, int priority, BigDecimal price,
-                    String currency) {
+public record Price(int brandId, long productId, LocalDateTime validFrom, LocalDateTime validTo, long priceListId, int priority,
+                    BigDecimal price, String currency) {
 
 }
 // TODO explicar por qué no un enum con las monedas.

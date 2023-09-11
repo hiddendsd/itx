@@ -4,7 +4,7 @@ import com.diegosaldiaz.inditex.pvp.application.domain.model.Price;
 import com.diegosaldiaz.inditex.pvp.application.exception.PriceNotFoundException;
 import com.diegosaldiaz.inditex.pvp.application.port.inbound.GetPvpUseCasePort;
 import com.diegosaldiaz.inditex.pvp.application.port.outbound.GetHighestPriorityPricePort;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class GetPvpService implements GetPvpUseCasePort {
    */
   // TODO Qué hacer cuando dos precios empatan a máxima prioridad?
   @Override
-  public Price apply(final int brandId, final long productId, final Instant date) {
+  public Price apply(final int brandId, final long productId, final LocalDateTime date) {
     return getPvpPort.apply(brandId, productId, date)
         .orElseThrow(PriceNotFoundException::new);
   }

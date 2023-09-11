@@ -17,3 +17,11 @@ TODO Flyway
 TODO explain common folder
 
 TODO explain local folder
+
+
+ENtity:
+Not using @ToString and @EqualsAndHashCode as they are an antipattern that might cause performance issues because the can load Lazy properties.
+
+Equals: Compare the object type (class) and the primary keys. If at least one PK is null, then return false. If both PK has value, then compare them.
+The rest of the properties are irrelevant.
+

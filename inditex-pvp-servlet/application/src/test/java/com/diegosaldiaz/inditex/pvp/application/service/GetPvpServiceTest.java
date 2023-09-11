@@ -4,7 +4,7 @@ import com.diegosaldiaz.inditex.pvp.application.domain.model.Price;
 import com.diegosaldiaz.inditex.pvp.application.exception.PriceNotFoundException;
 import com.diegosaldiaz.inditex.pvp.application.port.outbound.GetHighestPriorityPricePort;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class GetPvpServiceTest {
   private static final int BRAND_ID = 1;
   private static final long PRODUCT_ID = 2;
-  private static final Instant DATE = Instant.now();
+  private static final LocalDateTime DATE = LocalDateTime.now();
 
   @Test
   void testGetPvp() {
@@ -23,7 +23,7 @@ class GetPvpServiceTest {
     var service = new GetPvpService(port);
 
     // Act
-    var result = service.apply(BRAND_ID, PRODUCT_ID, Instant.now());
+    var result = service.apply(BRAND_ID, PRODUCT_ID, DATE);
 
     // Assert
     assertThat(result).isSameAs(expectedPrice);

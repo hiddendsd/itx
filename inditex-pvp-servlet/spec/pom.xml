@@ -83,6 +83,7 @@
                                 <additionalModelTypeAnnotations>@lombok.Builder @lombok.NoArgsConstructor @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
                                 <typeMappings>
                                     <typeMapping>Double=java.math.BigDecimal</typeMapping>
+                                    <typeMapping>date-time=LocalDateTime</typeMapping>
                                 </typeMappings>
                             </configOptions>
                         </configuration>

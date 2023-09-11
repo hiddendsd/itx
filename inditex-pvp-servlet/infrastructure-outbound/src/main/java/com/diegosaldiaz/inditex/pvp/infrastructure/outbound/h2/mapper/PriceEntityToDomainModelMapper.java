@@ -13,5 +13,6 @@ public interface PriceEntityToDomainModelMapper {
 
   @Mapping(target = "validFrom", source = "startDate")
   @Mapping(target = "validTo", source = "endDate")
+  @Mapping(target = "priceListId", source = "priceList")
   Price map(PriceEntity entity);
 }

@@ -1,7 +1,7 @@
 package com.diegosaldiaz.inditex.pvp.application.port.inbound;
 
 import com.diegosaldiaz.inditex.pvp.application.domain.model.Price;
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 /**
  * Get PVP UserCase Inbound Port.
@@ -9,5 +9,5 @@ import java.time.Instant;
 @FunctionalInterface
 public interface GetPvpUseCasePort {
 
-  Price apply(int brandId, long productId, Instant date);
+  Price apply(int brandId, long productId, LocalDateTime date);
 }

@@ -2,7 +2,7 @@ package com.diegosaldiaz.inditex.pvp.infrastructure.outbound.h2.repository;
 
 import com.diegosaldiaz.inditex.pvp.infrastructure.outbound.h2.entity.PriceEntity;
 import java.math.BigInteger;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -18,10 +18,10 @@ public interface PriceRepository extends CrudRepository<PriceEntity, BigInteger>
    *
    * @param brandId int BrandID
    * @param productId long ProductId
-   * @param start Instant TODO
-   * @param end Instant TODO
+   * @param start LocalDateTime TODO
+   * @param end LocalDateTime TODO
    * @return Optional PriceEntity with the selected price or Optional.empty if there is no price matching the input criterias
    */
-  Optional<PriceEntity> findFirstByBrandIdAndProductIdAndStartDateBeforeAndEndDateAfterOrderByPriorityDesc(int brandId, long productId,
-      Instant start, Instant end);
+  Optional<PriceEntity> findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(int brandId,
+      long productId, LocalDateTime start, LocalDateTime end);
 }
