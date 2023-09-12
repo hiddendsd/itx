@@ -1,6 +1,7 @@
 package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.entity;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Builder
 public class PriceEntity {
   @Id
-  private Long id; // TODO explain
+  private BigInteger id; // TODO explain
 
   @Column
   private long productId;
