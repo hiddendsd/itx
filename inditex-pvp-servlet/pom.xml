@@ -265,6 +265,7 @@
                                         </limits>
                                         <excludes>
                                             <exclude>**.config.*</exclude>
+                                            <exclude>**.aot.*</exclude>
                                             <exclude>**.*MapperImpl</exclude>
                                         </excludes>
                                     </rule>
