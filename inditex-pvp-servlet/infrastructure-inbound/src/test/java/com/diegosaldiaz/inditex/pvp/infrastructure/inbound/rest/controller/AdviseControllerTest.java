@@ -126,17 +126,4 @@ class AdviseControllerTest {
     assertThat(errorDto.getCode()).isEqualTo("V-002");
     assertThat(errorDto.getRetryable()).isFalse();
   }
-
-  /*
-   TODO
-
-  @Test
-  void testWrongParameterException() {
-    String message = "message";
-    ResponseEntity<ErrorDto> response = controller.handleWrongParameterException(new WrongParameterException(message), webRequest);
-    assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-    assertEquals(message, response.getBody().getMessage());
-  }
-
-   */
 }
