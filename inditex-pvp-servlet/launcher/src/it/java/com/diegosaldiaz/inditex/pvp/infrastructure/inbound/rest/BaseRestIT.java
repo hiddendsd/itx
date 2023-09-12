@@ -21,6 +21,7 @@ public class BaseRestIT extends BaseIT {
   protected static LocalDate DATE_2020_06_14 = LocalDate.of(2020, 6, 14);
   protected static LocalDate DATE_2020_06_15 = LocalDate.of(2020, 6, 15);
   protected static LocalDate DATE_2020_06_16 = LocalDate.of(2020, 6, 16);
+  protected static LocalDate DATE_2021_06_15 = LocalDate.of(2021, 6, 15);
   protected static LocalTime TIME_10_00 = LocalTime.of(10,0,0);
   protected static LocalTime TIME_16_00 = LocalTime.of(16,0,0);
   protected static LocalTime TIME_21_00 = LocalTime.of(21,0,0);

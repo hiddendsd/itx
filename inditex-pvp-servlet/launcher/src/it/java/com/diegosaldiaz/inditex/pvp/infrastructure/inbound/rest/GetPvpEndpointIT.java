@@ -4,6 +4,7 @@ import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.ErrorDto;
 import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.GetPvp200ResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -75,9 +76,21 @@ class GetPvpEndpointIT extends BaseRestIT {
         .expectStatus().isNotFound()
         .expectBody(ErrorDto.class)
         .value(dto -> {
-          assertThat(dto.getCode()).isNull();
-          assertThat(dto.getMessage()).isNull();
-          assertThat(dto.getRetryable()).isNull();
+          assertThat(dto.getCode()).isEqualTo("ITX-001");
+          assertThat(dto.getMessage()).isEqualTo("Price not found error for Brand [1] Product [35455] date[2019-06-16T21:00]");
+          assertThat(dto.getRetryable()).isTrue();
+        });
+  }
+
+  @Test
+  void testPriorityCollision() {
+    makeGetPvpEndpointCall(BRAND_ID, PRODUCT_ID, offsetDateTime(DATE_2021_06_15, TIME_21_00))
+        .expectStatus().isEqualTo(HttpStatus.CONFLICT)
+        .expectBody(ErrorDto.class)
+        .value(dto -> {
+          assertThat(dto.getCode()).isEqualTo("ITX-002");
+          assertThat(dto.getMessage()).isEqualTo("[2] prices share the max Priority [1] for Brand [1] Product [35455] date[2021-06-15T21:00]. Unable to disambiguate");
+          assertThat(dto.getRetryable()).isTrue();
         });
   }
 

@@ -57,6 +57,8 @@ paths:
           $ref: '#/components/responses/400BadRequestError'
         404:
           $ref: '#/components/responses/404NotFoundError'
+        409:
+          $ref: '#/components/responses/409ConflictError'
         default:
           $ref: '#/components/responses/500InternalServerError'
 
@@ -137,6 +139,13 @@ components:
 
     404NotFoundError:
       description: Resource Not Found Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    409ConflictError:
+      description: Conflict error
       content:
         application/json:
           schema:

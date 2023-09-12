@@ -2,9 +2,11 @@ package com.diegosaldiaz.inditex.pvp.application.service;
 
 import com.diegosaldiaz.inditex.pvp.application.domain.model.Price;
 import com.diegosaldiaz.inditex.pvp.application.exception.PriceNotFoundException;
+import com.diegosaldiaz.inditex.pvp.application.exception.PriorityCollisionException;
 import com.diegosaldiaz.inditex.pvp.application.port.inbound.GetPvpUseCasePort;
-import com.diegosaldiaz.inditex.pvp.application.port.outbound.GetHighestPriorityPricePort;
+import com.diegosaldiaz.inditex.pvp.application.port.outbound.GetHighestPriorityPricesPort;
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetPvpService implements GetPvpUseCasePort {
 
-  private final GetHighestPriorityPricePort getPvpPort;
+  private final GetHighestPriorityPricesPort getPvpPort;
 
   /**
    * Returns the PVP price for a given product of a given brand in a given date.
@@ -30,11 +32,19 @@ public class GetPvpService implements GetPvpUseCasePort {
    * @param date Instant with the date
    * @return Price with highest 'priority' value among all prices matching the input conditions.
    * @throws PriceNotFoundException when there is no Price for the input conditions.
+   * @throws PriorityCollisionException when there are more than one price sharing the max priority (for the input conditions).
    */
-  // TODO Qué hacer cuando dos precios empatan a máxima prioridad?
   @Override
   public Price apply(final int brandId, final long productId, final LocalDateTime date) {
     return getPvpPort.apply(brandId, productId, date)
-        .orElseThrow(() -> new PriceNotFoundException(brandId, productId, date));
+        .collect(
+            Collectors.collectingAndThen(
+                Collectors.toList(),
+                list -> switch (list.size()) {
+                  case 0 -> throw new PriceNotFoundException(brandId, productId, date);
+                  case 1 -> list.get(0);
+                  default -> throw new PriorityCollisionException(brandId, productId, date, list.get(0).priority(), list.size());
+                })
+        );
   }
 }

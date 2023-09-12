@@ -27,7 +27,7 @@ class PriceRepositoryIT extends BaseIT {
 
   @Test
   void testNoPricesFound() {
-      var result = repository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, LocalDateTime.now(), LocalDateTime.now());
+      var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, LocalDateTime.now());
       assertThat(result).isEmpty();
   }
 
@@ -37,11 +37,11 @@ class PriceRepositoryIT extends BaseIT {
     var date = LocalDateTime.of(2020,6,14,10,0,0);
 
     // Act
-    var result = repository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, date, date);
+    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, date);
 
     // Assert
-    assertThat(result).isNotEmpty();
-    assertThat(result.get().getPrice().setScale(2, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(35.5).setScale(2, RoundingMode.HALF_UP));
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).getPrice().setScale(2, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(35.5).setScale(2, RoundingMode.HALF_UP));
   }
 
   @Test
@@ -50,11 +50,11 @@ class PriceRepositoryIT extends BaseIT {
     var date = LocalDateTime.of(2020,6,14,16,0,0);
 
     // Act
-    var result = repository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, date, date);
+    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, date);
 
     // Assert
-    assertThat(result).isNotEmpty();
-    assertThat(result.get().getPrice().setScale(2, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(25.45).setScale(2, RoundingMode.HALF_UP));
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).getPrice().setScale(2, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(25.45).setScale(2, RoundingMode.HALF_UP));
   }
 
   @Test
@@ -63,7 +63,7 @@ class PriceRepositoryIT extends BaseIT {
     var justBefore = START_DATE.minusNanos(1);
 
     // Act
-    var result = repository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, justBefore, justBefore);
+    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, justBefore);
 
     // Assert
     assertThat(result).isEmpty();
@@ -72,21 +72,21 @@ class PriceRepositoryIT extends BaseIT {
   @Test
   void testDateRangeEdgeExactStartTime() {
     // Act
-    var result = repository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, START_DATE, START_DATE);
+    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, START_DATE);
 
     // Assert
-    assertThat(result).isNotEmpty();
-    assertThat(result.get().getPrice().setScale(2, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(35.50).setScale(2, RoundingMode.HALF_UP));
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).getPrice().setScale(2, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(35.50).setScale(2, RoundingMode.HALF_UP));
   }
 
   @Test
   void testDateRangeEdgeExactEndTime() {
     // Act
-    var result = repository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, END_DATE, END_DATE);
+    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, END_DATE);
 
     // Assert
-    assertThat(result).isNotEmpty();
-    assertThat(result.get().getPrice().setScale(2, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(38.95).setScale(2, RoundingMode.HALF_UP));
+    assertThat(result).hasSize(1);
+    assertThat(result.get(0).getPrice().setScale(2, RoundingMode.HALF_UP)).isEqualTo(BigDecimal.valueOf(38.95).setScale(2, RoundingMode.HALF_UP));
   }
 
   @Test
@@ -95,10 +95,22 @@ class PriceRepositoryIT extends BaseIT {
     var justAfter = END_DATE.plusNanos(1);
 
     // Act
-    var result = repository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, justAfter, justAfter);
+    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, justAfter);
 
     // Assert
     assertThat(result).isEmpty();
+  }
+
+  @Test
+  void testSeveralPricesSharingMaxPriority() {
+    // Arrange
+    var sharingPriorityDate = LocalDateTime.of(2021,6,15,0,0,0);
+
+    // Act
+    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, sharingPriorityDate);
+
+    // Assert
+    assertThat(result).hasSize(2);
   }
 
 }

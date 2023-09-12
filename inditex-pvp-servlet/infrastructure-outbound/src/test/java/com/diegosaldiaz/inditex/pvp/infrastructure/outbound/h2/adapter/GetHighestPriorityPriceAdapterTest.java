@@ -5,7 +5,7 @@ import com.diegosaldiaz.inditex.pvp.infrastructure.outbound.h2.entity.PriceEntit
 import com.diegosaldiaz.inditex.pvp.infrastructure.outbound.h2.mapper.PriceEntityToDomainModelMapper;
 import com.diegosaldiaz.inditex.pvp.infrastructure.outbound.h2.repository.PriceRepository;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,26 +29,28 @@ class GetHighestPriorityPriceAdapterTest {
   private PriceEntityToDomainModelMapper mapper;
 
   @InjectMocks
-  private GetHighestPriorityPriceAdapter adapter;
+  private GetHighestPriorityPricesAdapter adapter;
 
   @Test
   void testApply() {
     var priceEntity = PriceEntity.builder().build();
     var expectedPrice = Mockito.mock(Price.class);
-    Mockito.when(priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, DATE, DATE))
-        .thenReturn(Optional.of(priceEntity));
+    Mockito.when(priceRepository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, DATE))
+        .thenReturn(List.of(priceEntity));
     Mockito.when(mapper.map(priceEntity))
         .thenReturn(expectedPrice);
 
     var result = adapter.apply(BRAND_ID, PRODUCT_ID, DATE);
 
-    assertThat(result).containsSame(expectedPrice);
+    var prices = result.toList(); // As a steam can only be consumed once... and we want to make more than one assertion
+    assertThat(prices.size()).isOne();
+    assertThat(prices).contains(expectedPrice);
   }
 
   @Test
   void testApplyWhenNoPriceFound() {
-    Mockito.when(priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(BRAND_ID, PRODUCT_ID, DATE, DATE))
-        .thenReturn(Optional.empty());
+    Mockito.when(priceRepository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, DATE))
+        .thenReturn(List.of());
 
     var result = adapter.apply(BRAND_ID, PRODUCT_ID, DATE);
 

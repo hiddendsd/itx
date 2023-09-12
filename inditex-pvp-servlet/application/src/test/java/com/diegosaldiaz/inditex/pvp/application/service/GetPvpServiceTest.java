@@ -2,10 +2,11 @@ package com.diegosaldiaz.inditex.pvp.application.service;
 
 import com.diegosaldiaz.inditex.pvp.application.domain.model.Price;
 import com.diegosaldiaz.inditex.pvp.application.exception.PriceNotFoundException;
-import com.diegosaldiaz.inditex.pvp.application.port.outbound.GetHighestPriorityPricePort;
+import com.diegosaldiaz.inditex.pvp.application.exception.PriorityCollisionException;
+import com.diegosaldiaz.inditex.pvp.application.port.outbound.GetHighestPriorityPricesPort;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -19,7 +20,7 @@ class GetPvpServiceTest {
   void testGetPvp() {
     // Arrange
     var expectedPrice = new Price(BRAND_ID, PRODUCT_ID, DATE, DATE, 3, 4, BigDecimal.ONE, "EUR");
-    final GetHighestPriorityPricePort port = (a, b, c) -> Optional.of(expectedPrice);
+    final GetHighestPriorityPricesPort port = (a, b, c) -> Stream.of(expectedPrice);
     var service = new GetPvpService(port);
 
     // Act
@@ -32,12 +33,25 @@ class GetPvpServiceTest {
   @Test
   void testGetPvpNoMatchedConditions() {
     // Arrange
-    GetHighestPriorityPricePort port = (a, b, c) -> Optional.empty();
+    GetHighestPriorityPricesPort port = (a, b, c) -> Stream.empty();
     var service = new GetPvpService(port);
 
     // Act & Assert
     assertThatThrownBy(() -> service.apply(BRAND_ID, PRODUCT_ID, DATE))
         .isInstanceOf(PriceNotFoundException.class);
-    // TODO check message
+  }
+
+  @Test
+  void testMaxPriorityCollisin() {
+    // Arrange
+    GetHighestPriorityPricesPort port = (a, b, c) -> Stream.of(
+        new Price(BRAND_ID, PRODUCT_ID, DATE, DATE, 3, 4, BigDecimal.ONE, "EUR"),
+        new Price(BRAND_ID, PRODUCT_ID, DATE, DATE, 3, 1, BigDecimal.ONE, "EUR"),
+        new Price(BRAND_ID, PRODUCT_ID, DATE, DATE, 3, 4, BigDecimal.ONE, "EUR"));
+    var service = new GetPvpService(port);
+
+    // Act & Assert
+    assertThatThrownBy(() -> service.apply(BRAND_ID, PRODUCT_ID, DATE))
+        .isInstanceOf(PriorityCollisionException.class);
   }
 }

@@ -1,6 +1,7 @@
 package com.diegosaldiaz.inditex.pvp.infrastructure.inbound.rest.controller;
 
 import com.diegosaldiaz.inditex.pvp.application.exception.PriceNotFoundException;
+import com.diegosaldiaz.inditex.pvp.application.exception.PriorityCollisionException;
 import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.ErrorDto;
 import jakarta.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class AdviseController {
    *
    * @param ex NotImplementedException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto
+   * @return ResponseEntity with ErrorDto and NOT_FOUND status
    */
   @ExceptionHandler(PriceNotFoundException.class)
   public final ResponseEntity<ErrorDto> handlePriceNotFound(PriceNotFoundException ex, WebRequest req) {
@@ -41,12 +42,26 @@ public class AdviseController {
   }
 
   /**
+   * Handle response when a PriorityCollisionException has been raised at any point.
+   *
+   * @param ex PriorityCollisionException raised
+   * @param req WebRequest causing the exception
+   * @return ResponseEntity with ErrorDto and CONFLICT status
+   */
+  @ExceptionHandler(PriorityCollisionException.class)
+  public final ResponseEntity<ErrorDto> handlePriorityCollision(PriorityCollisionException ex, WebRequest req) {
+    var errorDto = newErrorDto(ex.getMessage(), ex.getCode(), ex.isRetryable());
+    return ResponseEntity
+        .status(HttpStatus.CONFLICT)
+        .body(errorDto);
+  }
+
+  /**
    * Handle response when a MethodArgumentNotValidException has been raised at any point.
    *
    * @param ex MethodArgumentNotValidException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto
-   *         "buId": 16,
+   * @return ResponseEntity with ErrorDto and BAD_REQUEST
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public final ResponseEntity<ErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest req) {
@@ -67,7 +82,7 @@ public class AdviseController {
    *
    * @param ex ConstraintViolationException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto
+   * @return ResponseEntity with ErrorDto and BAD_REQUEST
    */
   @ExceptionHandler(ConstraintViolationException.class)
   public final ResponseEntity<ErrorDto> handleConstraintViolationException(ConstraintViolationException ex, WebRequest req) {
@@ -85,7 +100,7 @@ public class AdviseController {
    *
    * @param ex MissingServletRequestParameterException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto
+   * @return ResponseEntity with ErrorDto and BAD_REQUEST
    */
   @ExceptionHandler(MissingServletRequestParameterException.class)
   public final ResponseEntity<ErrorDto> handleConstraintViolationException(MissingServletRequestParameterException ex, WebRequest req) {
