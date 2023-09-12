@@ -3,4 +3,8 @@
         <Class name="com.diegosaldiaz.inditex.pvp.application.exception.InditexPvpServletException" />
         <Bug pattern="FORMAT_STRING_MANIPULATION" />
     </Match>
+    <Match>
+        <Class name="com.diegosaldiaz.inditex.pvp.config.ObservationLogsHandler" />
+        <Bug pattern="CRLF_INJECTION_LOGS" />
+    </Match>
 </FindBugsFilter>
