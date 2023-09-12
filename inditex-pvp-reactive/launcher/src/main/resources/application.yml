@@ -1,3 +1,9 @@
+server:
+  port: 8082
+  shutdown: graceful
+  compression:
+    enabled: true
+
 spring:
   application:
     name: itx-pvp-reactive
@@ -12,9 +18,9 @@ spring:
     baseline-on-migrate: true
     locations: classpath:/db/migrations/common,classpath:/db/migrations/${ENV:pro}
 
-r2dbc:
-  migrate:
-    resources-paths: classpath:/db/migrations/common/*.sql
+#r2dbc:
+#  migrate:
+#    resources-paths: classpath:/db/migrations/common/*.sql
 
 logging:
   level:

@@ -1,0 +1,12 @@
+spring:
+#  flyway:
+#    locations: /db/migrations/common,/db/migrations/test
+  r2dbc:
+    # url: ${R2DBC_URI}
+    url: r2dbc:h2:file:///./tmp/inditexIT
+
+  flyway:
+    # url: ${JDBC_URI}
+    url: jdbc:h2:file:./tmp/inditexIT
+    baseline-on-migrate: true
+    locations: /db/migrations/common,/db/migrations/test

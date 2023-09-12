@@ -1,7 +1,6 @@
 package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.entity;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import lombok.AllArgsConstructor;

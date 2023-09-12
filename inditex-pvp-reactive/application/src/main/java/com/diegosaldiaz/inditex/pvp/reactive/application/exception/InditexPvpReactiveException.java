@@ -23,4 +23,17 @@ public class InditexPvpReactiveException extends RuntimeException {
     this.code = error.getCode();
     this.retryable = error.isRetryable();
   }
+
+  /**
+   * TODO.
+   *
+   * @param code TODO
+   * @param message TODO
+   * @param retryable TODO
+   */
+  public InditexPvpReactiveException(String code, String message, boolean retryable) {
+    super(message);
+    this.code = code;
+    this.retryable = retryable;
+  }
 }

@@ -1,25 +1,47 @@
 package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.repository;
 
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.entity.PriceEntity;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
 
-public interface PriceRepository extends ReactiveCrudRepository<PriceEntity, Long> {
+/**
+ * Price Entity Repository.
+ */
+@Repository
+public interface PriceRepository extends R2dbcRepository<PriceEntity, Long> {
 
-  @Query("""
-    SELECT * 
-    FROM PRICE 
-    WHERE brand_id = :brandId 
-        AND product_id = :productId 
-        AND start_date <= :date 
-        AND end_date >= :date 
-    ORDER BY PRIORITY DESC 
-    LIMIT 1
-    """)
-  Mono<PriceEntity> findByBrandIdAndProductIdAndStartDateLessThanEqual(int brandId, long productId, LocalDateTime date);
+  /**
+   * Returns the list of PriceEntities belonging to a given Brand and a given Product and having the maximum priority on a given date.
+   * Examples:
+   *  Case 1: there are three prices matching the input criteria with different priorities:
+   *    - Priority 0
+   *    - Priotity 1
+   *    - Priotiry 2 <-- Returned
+   *  Case 2: there are three prices matching the input criteria with more than one having the max priority:
+   *    - Priority 2 <-- Returned
+   *    - Priotity 1
+   *    - Priotiry 2 <-- Returned
+   *
+   * @param brandId int BrandID
+   * @param productId long ProductId
+   * @param date LocalDateTime
+   * @return List of PriceEntities matchig the input criteria and sharing the max(priority)
+   */
+  @Query(value = """
+        SELECT a.*
+        FROM price a
+                 LEFT OUTER JOIN price b
+                                 ON a.priority < b.priority AND a.brand_id = b.brand_id AND a.product_id = b.product_id AND
+                                    b.start_date <= :date AND b.end_date >= :date
+        WHERE b.id IS NULL
+          AND a.brand_id = :brandId
+          AND a.product_id = :productId
+          AND a.start_date <= :date
+          AND a.end_date >= :date        
+      """)
+  Flux<PriceEntity> searchHigherPriorityPrices(int brandId, long productId, LocalDateTime date);
+
 }
