@@ -3,7 +3,7 @@ package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.error;
 import lombok.Getter;
 
 /**
- * TODO.
+ * Managed Error Attributes.
  */
 @Getter
 public enum ErrorAttributesKey {

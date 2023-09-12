@@ -7,11 +7,18 @@ import java.util.function.BiConsumer;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO.
+ * Validates if a String can be converted to a OffsetDateTime object.
  */
 @Component
 public class DateValidation implements BiConsumer<String, String> {
 
+  /**
+   * Validates if a String can be converted to a OffsetDateTime object.
+   *
+   * @param param The object identifier
+   * @param value The value that want to be validated
+   * @throws ValidationException when the value can not be converted to OffsetDateTime.
+   */
   @Override
   public void accept(String param, String value) {
     try {

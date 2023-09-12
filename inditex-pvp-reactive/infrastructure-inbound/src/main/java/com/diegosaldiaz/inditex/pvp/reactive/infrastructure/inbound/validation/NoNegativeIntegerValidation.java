@@ -5,11 +5,18 @@ import java.util.function.BiConsumer;
 import org.springframework.stereotype.Component;
 
 /**
- * TODO.
+ * Validates whether a String can be converted to a no negative integer number.
  */
 @Component
 public class NoNegativeIntegerValidation implements BiConsumer<String, String> {
 
+  /**
+   * Validates whether a String can be converted to a no negative integer number.
+   *
+   * @param param The object identifier
+   * @param value The value that want to be validated
+   * @throws ValidationException when the value can not be converted to a positive number without decimals.
+   */
   @Override
   public void accept(String param, String value) {
     try {
