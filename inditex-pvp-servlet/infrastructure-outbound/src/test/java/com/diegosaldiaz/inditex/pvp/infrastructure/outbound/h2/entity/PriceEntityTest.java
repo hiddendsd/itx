@@ -106,6 +106,29 @@ class PriceEntityTest {
     assertThat(entity).hasSameHashCodeAs(other);
   }
 
+  @Test
+  void testProperties() {
+    var target = new PriceEntity();
+    target.setId(ID);
+    assertThat(target.getId()).isEqualTo(ID);
+    target.setBrandId(BRAND_ID);
+    assertThat(target.getBrandId()).isEqualTo(BRAND_ID);
+    target.setProductId(PRODUCT_ID);
+    assertThat(target.getProductId()).isEqualTo(PRODUCT_ID);
+    target.setStartDate(DATE_TIME);
+    assertThat(target.getStartDate()).isEqualTo(DATE_TIME);
+    target.setEndDate(DATE_TIME);
+    assertThat(target.getEndDate()).isEqualTo(DATE_TIME);
+    target.setPriority(PRIORITY);
+    assertThat(target.getPriority()).isEqualTo(PRIORITY);
+    target.setPriceList(PRICE_LIST);
+    assertThat(target.getPriceList()).isEqualTo(PRICE_LIST);
+    target.setPrice(PRICE);
+    assertThat(target.getPrice()).isEqualTo(PRICE);
+    target.setCurrency(CURRENCY);
+    assertThat(target.getCurrency()).isEqualTo(CURRENCY);
+  }
+
   private PriceEntity newPriceEntity(BigInteger id) {
     return PriceEntity.builder()
         .id(id)

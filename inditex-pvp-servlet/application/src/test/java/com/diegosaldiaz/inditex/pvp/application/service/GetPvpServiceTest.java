@@ -42,7 +42,7 @@ class GetPvpServiceTest {
   }
 
   @Test
-  void testMaxPriorityCollisin() {
+  void testMaxPriorityCollision() {
     // Arrange
     GetHighestPriorityPricesPort port = (a, b, c) -> Stream.of(
         new Price(BRAND_ID, PRODUCT_ID, DATE, DATE, 3, 4, BigDecimal.ONE, "EUR"),

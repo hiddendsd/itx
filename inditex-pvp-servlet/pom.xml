@@ -37,6 +37,7 @@
         <!-- Plugins -->
         <openapi-generator-maven-plugin.version>7.0.0</openapi-generator-maven-plugin.version>
         <maven-checkstyle-plugin.version>3.2.0</maven-checkstyle-plugin.version>
+        <maven-pmd-plugin.version>3.21.0</maven-pmd-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -146,6 +147,27 @@
                     </executions>
                 </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>3.0.0-M7</version>
+                    <configuration>
+                        <argLine>${failsafe.jacoco.args}</argLine>
+                        <includes>
+                            <include>**/*IT</include>
+                        </includes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>integration-test</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
                 <!-- Unit Tests -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -153,7 +175,6 @@
                     <version>2.22.2</version> <!-- TODO -->
                     <configuration>
                         <testFailureIgnore>false</testFailureIgnore>
-                        <argLine>--add-opens java.base/java.time=ALL-UNNAMED</argLine> <!-- Avoid OpenPOJO issue with LocalDateTime type -->
                     </configuration>
                 </plugin>
 
@@ -161,7 +182,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.8</version> <!-- TODO -->
+                    <version>0.8.8</version>
                     <executions>
                         <execution>
                             <id>prepare-agent</id>
@@ -170,6 +191,7 @@
                                 <goal>prepare-agent</goal>
                             </goals>
                         </execution>
+
                         <execution>
                             <id>post-unit-test</id>
                             <phase>test</phase>
@@ -215,12 +237,12 @@
                                             <limit>
                                                 <counter>LINE</counter>
                                                 <value>COVEREDRATIO</value>
-                                                <minimum>0.80</minimum>
+                                                <minimum>1</minimum>
                                             </limit>
                                             <limit>
                                                 <counter>BRANCH</counter>
                                                 <value>COVEREDRATIO</value>
-                                                <minimum>0.80</minimum>
+                                                <minimum>1</minimum>
                                             </limit>
                                         </limits>
                                         <excludes>
@@ -273,7 +295,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-pmd-plugin</artifactId>
-                    <version>3.21.0</version>
+                    <version>${maven-pmd-plugin.version}</version>
                     <configuration>
                         <rulesets>
                             <ruleset>config/pmd.xml</ruleset>
@@ -337,41 +359,26 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
     </build>
 
-<!--    <reporting>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-pmd-plugin</artifactId>-->
-<!--                <version>3.21.0</version>-->
-<!--                <configuration>-->
-<!--                    <rulesets>-->
-<!--                        &lt;!&ndash; A rule set, that comes bundled with PMD &ndash;&gt;-->
-<!--                        <ruleset>./config/pmd.xml</ruleset>-->
-<!--                        &lt;!&ndash; Custom local file system rule set &ndash;&gt;-->
-<!--                        <ruleset>d:\rulesets\strings.xml</ruleset>-->
-<!--                        &lt;!&ndash; Custom remote rule set accessed via a URL &ndash;&gt;-->
-<!--                        <ruleset>http://localhost/design.xml</ruleset>-->
-<!--                    </rulesets>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </reporting>-->
+    <reports>
+        <report>report</report>
+    </reports>
 
     <reporting>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <version>3.3.0</version>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-jxr-plugin</artifactId>-->
+<!--                <version>3.3.0</version>-->
+<!--            </plugin>-->
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-                <version>3.0.4</version>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>findbugs-maven-plugin</artifactId>-->
+<!--                <version>3.0.4</version>-->
+<!--            </plugin>-->
         </plugins>
     </reporting>
 </project>
