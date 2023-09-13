@@ -4,7 +4,7 @@ import com.diegosaldiaz.inditex.pvp.reactive.application.domain.model.Price;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.entity.PriceEntity;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.mapper.PriceEntityToDomainModelMapper;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.repository.PriceRepository;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 import static org.mockito.Mockito.when;
@@ -29,7 +29,7 @@ class GetHighestPriorityPricesAdapterTest {
   void testApply() {
     var brandId = 1;
     var productId = 2L;
-    var date = LocalDateTime.now();
+    var date = Instant.now();
     var entity = PriceEntity.builder().build();
     var price = new Price(brandId, productId, date, date, 0, 0, null, null);
     when(priceRepository.searchHigherPriorityPrices(brandId, productId, date))

@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8882
   shutdown: graceful
   compression:
     enabled: true
@@ -7,25 +7,34 @@ server:
 spring:
   application:
     name: itx-pvp-reactive
-
+  main:
+    web-application-type: reactive
   r2dbc:
-    # url: ${R2DBC_URI}
-    url: r2dbc:h2:file:///./tmp/inditex
-
+    url: ${R2DBC_URI}
   flyway:
-    # url: ${JDBC_URI}
-    url: jdbc:h2:file:./tmp/inditex
+    url: ${JDBC_URI}
     baseline-on-migrate: true
     locations: classpath:/db/migrations/common,classpath:/db/migrations/${ENV:pro}
 
-#r2dbc:
-#  migrate:
-#    resources-paths: classpath:/db/migrations/common/*.sql
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
 
 logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
   level:
-    root: ${LOG_LEVEL_ROOT}
-    com.diegosaldiaz.itx.pvp: ${LOG_LEVEL_ITX_PVP}
-    org.springframework: ${LOG_LEVEL_SPRING_FRAMEWORK}
-    org.hibernate.SQL: ${LOG_LEVEL_HIBERNATE_SQL}
-    org.hibernate.type.descriptor.sql.BasicBinder: ${LOG_LEVEL_HIBERNATE_BASIC_BINDER}
+    root: ${LOG_LEVEL_ROOT:error}
+    com.diegosaldiaz.inditex.pvp.reactive: ${LOG_LEVEL_ITX_PVP:info}
+    org.springframework: ${LOG_LEVEL_SPRING_FRAMEWORK:info}

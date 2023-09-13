@@ -1,7 +1,7 @@
 package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.repository;
 
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.entity.PriceEntity;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
@@ -18,12 +18,12 @@ public interface PriceRepository extends R2dbcRepository<PriceEntity, Long> {
    * Examples:
    *  Case 1: there are three prices matching the input criteria with different priorities:
    *    - Priority 0
-   *    - Priotity 1
-   *    - Priotiry 2 <-- Returned
+   *    - Priority 1
+   *    - Priority 2 <-- Returned
    *  Case 2: there are three prices matching the input criteria with more than one having the max priority:
    *    - Priority 2 <-- Returned
-   *    - Priotity 1
-   *    - Priotiry 2 <-- Returned
+   *    - Priority 1
+   *    - Priority 2 <-- Returned
    *
    * @param brandId int BrandID
    * @param productId long ProductId
@@ -42,6 +42,6 @@ public interface PriceRepository extends R2dbcRepository<PriceEntity, Long> {
           AND a.start_date <= :date
           AND a.end_date >= :date        
       """)
-  Flux<PriceEntity> searchHigherPriorityPrices(int brandId, long productId, LocalDateTime date);
+  Flux<PriceEntity> searchHigherPriorityPrices(int brandId, long productId, Instant date);
 
 }

@@ -1,7 +1,7 @@
 package com.diegosaldiaz.inditex.pvp.reactive.application.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 /**
  * Price Entity.
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  * @param price BigDecimal with the amount of money
  * @param currency String with the currency
  */
-public record Price(int brandId, long productId, LocalDateTime validFrom, LocalDateTime validTo, long priceListId, int priority,
+public record Price(int brandId, long productId, Instant validFrom, Instant validTo, long priceListId, int priority,
                     BigDecimal price, String currency) {
 
 }

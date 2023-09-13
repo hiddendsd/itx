@@ -2,7 +2,7 @@ package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.entity;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ class PriceEntityTest {
     private static final BigInteger DIFFERENT_ID = BigInteger.TWO;
     private static final int BRAND_ID = 1;
     private static final long PRODUCT_ID = 2;
-    private static final LocalDateTime DATE_TIME = LocalDateTime.of(2023, 11, 9, 14, 24, 35);
+    private static final Instant DATE_TIME = Instant.parse("2023-11-09T14:24:35Z");
     private static final int PRIORITY = 5;
     private static final int PRICE_LIST = 6;
     private static final BigDecimal PRICE = BigDecimal.TEN;
@@ -73,7 +73,7 @@ class PriceEntityTest {
           .id(ID)
           .brandId(BRAND_ID+1)
           .productId(PRODUCT_ID+2)
-          .startDate(DATE_TIME.plusMinutes(1))
+          .startDate(DATE_TIME.plusSeconds(1))
           .endDate(DATE_TIME.minusSeconds(23))
           .priority(PRIORITY - 4)
           .priceList(PRICE_LIST + 3)
@@ -86,7 +86,7 @@ class PriceEntityTest {
 
     @Test
     void testToString() {
-      assertThat(entity).hasToString("PriceEntity{id=1, productId=2, brandId=1, startDate=2023-11-09T14:24:35, endDate=2023-11-09T14:24:35, priority=5, priceList=6, price=10, currency='EUR'}");
+      assertThat(entity).hasToString("PriceEntity{id=1, productId=2, brandId=1, startDate=2023-11-09T14:24:35Z, endDate=2023-11-09T14:24:35Z, priority=5, priceList=6, price=10, currency='EUR'}");
     }
 
     @Test

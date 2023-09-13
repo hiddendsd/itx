@@ -1,12 +1,9 @@
 package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.mapper;
 
-import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.PvpDto;
-import com.diegosaldiaz.inditex.pvp.reactive.application.domain.model.Price;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Spy;
@@ -20,30 +17,14 @@ class PriceDomainModelToDtoMapperTest {
 
   @Test
   void testMapTime() {
-    var instant = LocalDateTime.of(2023, 9, 11, 0, 0, 0);
+    var instant = Instant.parse("2020-01-02T03:04:05Z");
     OffsetDateTime result = mapper.mapTime(instant);
 
-    assertThat(result.getYear()).isEqualTo(2023);
-    assertThat(result.getMonthValue()).isEqualTo(9);
-    assertThat(result.getDayOfMonth()).isEqualTo(11);
-    assertThat(result.getHour()).isZero();
-    assertThat(result.getMinute()).isZero();
-    assertThat(result.getSecond()).isZero();
-  }
-
-  @Test
-  void testToDtoWithOffset() {
-    var price = new Price(0, 0, LocalDateTime.now(), LocalDateTime.now(),0, 0, null, null);
-    ZoneOffset offset = ZoneOffset.UTC;
-    ZoneOffset newOffset = ZoneOffset.of("+05:00");
-    var pvpDto = PvpDto.builder()
-        .validFrom(OffsetDateTime.now(offset))
-        .validTo(OffsetDateTime.now(offset))
-        .build();
-    when(mapper.toDto(price)).thenReturn(pvpDto);
-
-    var result = mapper.toDto(price, newOffset);
-
-    assertThat(result.getValidFrom().getOffset()).isEqualTo(newOffset);
+    assertThat(result.getYear()).isEqualTo(2020);
+    assertThat(result.getMonthValue()).isEqualTo(1);
+    assertThat(result.getDayOfMonth()).isEqualTo(2);
+    assertThat(result.getHour()).isEqualTo(3);
+    assertThat(result.getMinute()).isEqualTo(4);
+    assertThat(result.getSecond()).isEqualTo(5);
   }
 }

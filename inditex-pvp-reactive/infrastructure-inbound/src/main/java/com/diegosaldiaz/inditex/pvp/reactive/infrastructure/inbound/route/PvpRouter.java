@@ -31,7 +31,7 @@ public class PvpRouter {
   @Bean
   public RouterFunction<ServerResponse> route(PvpHandler pvpHandler) {
     return RouterFunctions.route(
-        GET("/brands/{brandId}/products/{productId}/prices/pvp")
+        GET("/pvp-api/v1/brands/{brandId}/products/{productId}/prices/pvp")
             .and(accept(MediaType.APPLICATION_JSON)), pvpHandler::get)
         .filter((request, next) -> {
           noNegativeIntegerValidation.accept("'brandId' path param", request.pathVariable("brandId"));

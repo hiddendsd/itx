@@ -5,7 +5,7 @@ import com.diegosaldiaz.inditex.pvp.reactive.application.exception.PriceNotFound
 import com.diegosaldiaz.inditex.pvp.reactive.application.exception.PriorityCollisionException;
 import com.diegosaldiaz.inditex.pvp.reactive.application.port.outbound.GetHighestPriorityPricesPort;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ class GetPvpServiceTest {
 
   private static final int BRAND_ID = 1;
   private static final long PRODUCT_ID = 2;
-  private static final LocalDateTime DATE = LocalDateTime.now();
+  private static final Instant DATE = Instant.now();
 
   @Mock
   private GetHighestPriorityPricesPort getPvpPort;

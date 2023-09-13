@@ -1,10 +1,9 @@
 package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.repository;
 
 import com.diegosaldiaz.inditex.pvp.reactive.BaseIT;
-import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.repository.PriceRepository;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import reactor.test.StepVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,23 +13,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 class PriceRepositoryIT extends BaseIT {
   private static final int BRAND_ID = 1;
   private static final long PRODUCT_ID = 35455;
-  private static final LocalDateTime START_DATE = LocalDateTime.of(2020,6,14,0,0,0);
-  private static final LocalDateTime END_DATE = LocalDateTime.of(2020,12,31,23,59,59);
+  private static final Instant START_DATE = Instant.parse("2020-06-14T00:00:00Z");
+  private static final Instant END_DATE = Instant.parse("2020:12:31T23:59:59Z");
 
   @Autowired
   private PriceRepository repository;
 
   @Test
   void testNoPricesFound() {
-    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, LocalDateTime.now());
+    var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, Instant.now());
     StepVerifier.create(result).verifyComplete();
   }
 
   @Test
   void testOnePriceInDateRange() {
     // Arrange
-    var date = LocalDateTime.of(2020,6,14,10,0,0);
-
+    var date = Instant.parse("2020-06-14T10:00:00Z");
     // Act
     var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, date);
 
@@ -44,7 +42,7 @@ class PriceRepositoryIT extends BaseIT {
   @Test
   void testSeveralPricesInDateRangeReturnsHighestPriority() {
     // Arrange
-    var date = LocalDateTime.of(2020,6,14,16,0,0);
+    var date = Instant.parse("2020-06-14T16:00:00Z");
 
     // Act
     var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, date);
@@ -107,7 +105,7 @@ class PriceRepositoryIT extends BaseIT {
   @Test
   void testSeveralPricesSharingMaxPriority() {
     // Arrange
-    var sharingPriorityDate = LocalDateTime.of(2021,6,15,0,0,0);
+    var sharingPriorityDate = Instant.parse("2021-06-15T00:00:00Z");
 
     // Act
     var result = repository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, sharingPriorityDate);

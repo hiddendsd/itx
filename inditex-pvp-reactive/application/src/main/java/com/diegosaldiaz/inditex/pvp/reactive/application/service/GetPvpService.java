@@ -5,7 +5,7 @@ import com.diegosaldiaz.inditex.pvp.reactive.application.exception.PriceNotFound
 import com.diegosaldiaz.inditex.pvp.reactive.application.exception.PriorityCollisionException;
 import com.diegosaldiaz.inditex.pvp.reactive.application.port.inbound.GetPvpUseCasePort;
 import com.diegosaldiaz.inditex.pvp.reactive.application.port.outbound.GetHighestPriorityPricesPort;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -35,7 +35,7 @@ public class GetPvpService implements GetPvpUseCasePort {
    * @throws PriorityCollisionException when there are more than one price sharing the max priority (for the input conditions).
    */
   @Override
-  public Mono<Price> apply(int brandId, long productId, LocalDateTime date) {
+  public Mono<Price> apply(int brandId, long productId, Instant date) {
     return getPvpPort.apply(brandId, productId, date)
         .switchIfEmpty(Mono.error(new PriceNotFoundException(brandId, productId, date)))
         .collectList()

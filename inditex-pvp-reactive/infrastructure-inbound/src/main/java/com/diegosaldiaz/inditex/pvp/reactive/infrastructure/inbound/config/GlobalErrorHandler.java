@@ -1,7 +1,8 @@
-package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.error;
+package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.config;
 
 import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.ErrorDto;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
@@ -25,6 +26,7 @@ import reactor.core.publisher.Mono;
  */
 @Component
 @Order(-2)
+@Slf4j
 public class GlobalErrorHandler extends AbstractErrorWebExceptionHandler {
 
   /**
@@ -51,7 +53,7 @@ public class GlobalErrorHandler extends AbstractErrorWebExceptionHandler {
         .message(errorPropertiesMap.get(ErrorAttributesKey.MESSAGE.getKey()).toString())
         .retryable((Boolean) errorPropertiesMap.get(ErrorAttributesKey.RETRYABLE.getKey()))
         .build();
-
+    log.warn("Error: {}. Request details: {}", errorDto, request);
     return ServerResponse.status((HttpStatusCode) errorPropertiesMap.get(ErrorAttributesKey.STATUS.getKey()))
         .contentType(MediaType.APPLICATION_JSON)
         .body(BodyInserters.fromValue(errorDto));

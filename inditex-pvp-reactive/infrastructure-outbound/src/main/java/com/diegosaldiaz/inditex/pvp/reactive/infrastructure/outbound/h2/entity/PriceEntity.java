@@ -2,7 +2,7 @@ package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.entity;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,10 +34,10 @@ public class PriceEntity {
   private int brandId;
 
   @Column
-  private LocalDateTime startDate;
+  private Instant startDate;
 
   @Column
-  private LocalDateTime endDate;
+  private Instant endDate;
 
   @Column
   private int priority;
@@ -45,7 +45,7 @@ public class PriceEntity {
   @Column
   private int priceList;
 
-  @Column // TODO (scale = 20, precision = 2)
+  @Column
   private BigDecimal price;
 
   @Column

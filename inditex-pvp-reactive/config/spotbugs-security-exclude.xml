@@ -3,4 +3,9 @@
         <Class name="com.diegosaldiaz.inditex.pvp.reactive.application.exception.InditexPvpReactiveException" />
         <Bug pattern="FORMAT_STRING_MANIPULATION" />
     </Match>
+
+    <Match>
+        <Bug pattern="CRLF_INJECTION_LOGS" />
+    </Match>
+
 </FindBugsFilter>

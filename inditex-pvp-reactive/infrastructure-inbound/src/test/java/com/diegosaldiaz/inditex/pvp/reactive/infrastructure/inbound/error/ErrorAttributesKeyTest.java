@@ -1,5 +1,6 @@
 package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.error;
 
+import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.config.ErrorAttributesKey;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 

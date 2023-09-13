@@ -4,7 +4,7 @@ import com.diegosaldiaz.inditex.pvp.reactive.application.domain.model.Price;
 import com.diegosaldiaz.inditex.pvp.reactive.application.port.outbound.GetHighestPriorityPricesPort;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.mapper.PriceEntityToDomainModelMapper;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.repository.PriceRepository;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -20,7 +20,7 @@ public class GetHighestPriorityPricesAdapter implements GetHighestPriorityPrices
   private final PriceEntityToDomainModelMapper toModelMapper;
 
   @Override
-  public Flux<Price> apply(final int brandId, final long productId, final LocalDateTime date) {
+  public Flux<Price> apply(final int brandId, final long productId, final Instant date) {
     return priceRepository.searchHigherPriorityPrices(brandId, productId, date)
         .map(toModelMapper::map);
   }

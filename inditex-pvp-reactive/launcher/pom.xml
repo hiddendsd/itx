@@ -36,6 +36,17 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
             <!-- exclude junit 4 -->
@@ -61,6 +72,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -71,6 +87,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>com.diegosaldiaz.inditex.pvp.reactive.InditexPvpReactiveMicroservice</mainClass>
+                    <imageName>${project.parent.name}:${project.parent.version}</imageName>
                 </configuration>
                 <executions>
                     <execution>
@@ -85,7 +102,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
             </plugin>
-
         </plugins>
     </build>
 </project>

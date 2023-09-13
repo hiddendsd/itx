@@ -1,4 +1,4 @@
-package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.error;
+package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.config;
 
 import com.diegosaldiaz.inditex.pvp.reactive.application.exception.InditexPvpReactiveException;
 import com.diegosaldiaz.inditex.pvp.reactive.application.exception.PriceNotFoundException;

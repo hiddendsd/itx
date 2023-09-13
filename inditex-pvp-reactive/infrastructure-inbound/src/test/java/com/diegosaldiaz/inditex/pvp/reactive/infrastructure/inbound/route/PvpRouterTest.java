@@ -7,7 +7,7 @@ import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.handler.PvpH
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.mapper.PriceDomainModelToDtoMapper;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.validation.DateValidation;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.validation.NoNegativeIntegerValidation;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import reactor.core.publisher.Mono;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -32,7 +32,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 @WebFluxTest
 class PvpRouterTest {
 
-  private static final LocalDateTime DATE = LocalDateTime.of(2020,1,2,3,4,5);
+  private static final Instant DATE = Instant.parse("2020-01-02T03:04:05Z");
   private static final int BRAND_ID = 1;
   private static final long PRODUCT_ID = 2L;
 
@@ -63,7 +63,7 @@ class PvpRouterTest {
     Mockito.when(getPvpPort.apply(BRAND_ID, PRODUCT_ID, DATE)).thenReturn(Mono.empty());
 
     testClient
-        .get().uri("/brands/1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
+        .get().uri("/pvp-api/v1/brands/1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .exchange()
         .expectStatus()
@@ -77,10 +77,10 @@ class PvpRouterTest {
   void testRouterFilterFail() {
     Mockito.doThrow(ValidationException.class).when(noNegativeIntegerValidation).accept(anyString(), anyString());
     testClient
-        .get().uri("/brands/-1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
+        .get().uri("/pvp-api/v1/brands/-1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .exchange();
-    Mockito.verify(getPvpPort, Mockito.never()).apply(anyInt(), anyLong(), any(LocalDateTime.class));
+    Mockito.verify(getPvpPort, Mockito.never()).apply(anyInt(), anyLong(), any(Instant.class));
   }
 
 }

@@ -1,7 +1,7 @@
 package com.diegosaldiaz.inditex.pvp.reactive.application.port.outbound;
 
 import com.diegosaldiaz.inditex.pvp.reactive.application.domain.model.Price;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import reactor.core.publisher.Flux;
 
 /**
@@ -12,5 +12,5 @@ import reactor.core.publisher.Flux;
 @FunctionalInterface
 public interface GetHighestPriorityPricesPort {
 
-  Flux<Price> apply(int brandId, long productId, LocalDateTime date);
+  Flux<Price> apply(int brandId, long productId, Instant date);
 }
