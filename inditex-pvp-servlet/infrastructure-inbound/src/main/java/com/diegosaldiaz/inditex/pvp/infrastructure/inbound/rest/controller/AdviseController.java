@@ -35,6 +35,7 @@ public class AdviseController {
    */
   @ExceptionHandler(PriceNotFoundException.class)
   public final ResponseEntity<ErrorDto> handlePriceNotFound(PriceNotFoundException ex, WebRequest req) {
+    logWarn("Not Found", ex, req);
     var errorDto = newErrorDto(ex.getMessage(), ex.getCode(), ex.isRetryable());
     return ResponseEntity
         .status(HttpStatus.NOT_FOUND)
@@ -50,6 +51,7 @@ public class AdviseController {
    */
   @ExceptionHandler(PriorityCollisionException.class)
   public final ResponseEntity<ErrorDto> handlePriorityCollision(PriorityCollisionException ex, WebRequest req) {
+    logWarn("Price Collision", ex, req);
     var errorDto = newErrorDto(ex.getMessage(), ex.getCode(), ex.isRetryable());
     return ResponseEntity
         .status(HttpStatus.CONFLICT)
@@ -65,6 +67,7 @@ public class AdviseController {
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public final ResponseEntity<ErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest req) {
+    logWarn("Not Valid Argument", ex, req);
     final StringBuilder msg = new StringBuilder();
     if (ex.getFieldErrors().isEmpty()) {
       ex.getAllErrors().forEach(e -> msg.append(composeValidationErrorMessage(e.getObjectName(), e.getDefaultMessage())));
@@ -86,6 +89,7 @@ public class AdviseController {
    */
   @ExceptionHandler(ConstraintViolationException.class)
   public final ResponseEntity<ErrorDto> handleConstraintViolationException(ConstraintViolationException ex, WebRequest req) {
+    logWarn("Constraint Violation", ex, req);
     String msg = ex.getConstraintViolations().stream()
         .map(violation -> composeValidationErrorMessage(violation.getPropertyPath().toString(), violation.getMessage()))
         .collect(Collectors.joining());
@@ -104,6 +108,7 @@ public class AdviseController {
    */
   @ExceptionHandler(MissingServletRequestParameterException.class)
   public final ResponseEntity<ErrorDto> handleConstraintViolationException(MissingServletRequestParameterException ex, WebRequest req) {
+    logWarn("Constraint Violation", ex, req);
     var errorDto = newErrorDto(ex.getBody().getDetail(), ERROR_MISSING_PARAMETER, false);
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
@@ -120,6 +125,10 @@ public class AdviseController {
         .code(code)
         .retryable(retryable)
         .build();
+  }
+
+  private void logWarn(String description, Throwable ex, WebRequest req) {
+    log.warn("Error: {}. Exception Details: {}. Request Details: {}", description, ex.getMessage(), req.toString());
   }
 }
 

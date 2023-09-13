@@ -12,8 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 public class BaseRestIT extends BaseIT {
 
-  protected static final String PATH = "/brands/1/products/35455/prices/pvp";
-  protected static final String PVP_PATH = "/brands/%s/products/%s/prices/pvp";
+  protected static final String PVP_PATH = "/pvp-api/v1/brands/%s/products/%s/prices/pvp";
 
   protected static int BRAND_ID = 1;
   protected static long PRODUCT_ID = 35455;

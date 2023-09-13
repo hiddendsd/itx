@@ -4,11 +4,11 @@
         <Bug pattern="FORMAT_STRING_MANIPULATION" />
     </Match>
     <Match>
-        <Class name="com.diegosaldiaz.inditex.pvp.config.ObservationLogsHandler" />
+<!--        <Class name="com.diegosaldiaz.inditex.pvp.config.ObservationLogsHandler" />-->
         <Bug pattern="CRLF_INJECTION_LOGS" />
     </Match>
-    <Match>
-        <Class name="com.diegosaldiaz.inditex.pvp.application.aot.PortLoggerAspect" />
-        <Bug pattern="CRLF_INJECTION_LOGS" />
-    </Match>
+<!--    <Match>-->
+<!--        <Class name="com.diegosaldiaz.inditex.pvp.application.aot.PortLoggerAspect" />-->
+<!--        <Bug pattern="CRLF_INJECTION_LOGS" />-->
+<!--    </Match>-->
 </FindBugsFilter>

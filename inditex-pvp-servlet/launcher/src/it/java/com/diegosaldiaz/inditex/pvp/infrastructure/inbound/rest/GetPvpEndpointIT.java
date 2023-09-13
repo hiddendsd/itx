@@ -15,11 +15,7 @@ class GetPvpEndpointIT extends BaseRestIT {
     makeGetPvpEndpointCall(BRAND_ID, PRODUCT_ID, offsetDateTime(DATE_2020_06_14, TIME_10_00))
         .expectStatus().isOk()
         .expectBody(GetPvp200ResponseDto.class)
-        .value(dto -> {
-          var pvpDto = dto.getData();
-          assertThat(pvpDto.getPvp()).isEqualTo(35.50);
-          // TODO complete validations
-        });
+        .value(dto -> assertThat(dto.getData().getPvp()).isEqualTo(35.50));
   }
 
   @Test
@@ -27,11 +23,7 @@ class GetPvpEndpointIT extends BaseRestIT {
     makeGetPvpEndpointCall(BRAND_ID, PRODUCT_ID, offsetDateTime(DATE_2020_06_14, TIME_16_00))
         .expectStatus().isOk()
         .expectBody(GetPvp200ResponseDto.class)
-        .value(dto -> {
-          var pvpDto = dto.getData();
-          assertThat(pvpDto.getPvp()).isEqualTo(25.45);
-          // TODO complete validations
-        });
+        .value(dto -> assertThat(dto.getData().getPvp()).isEqualTo(25.45));
   }
 
   @Test
@@ -39,11 +31,7 @@ class GetPvpEndpointIT extends BaseRestIT {
     makeGetPvpEndpointCall(BRAND_ID, PRODUCT_ID, offsetDateTime(DATE_2020_06_14, TIME_21_00))
         .expectStatus().isOk()
         .expectBody(GetPvp200ResponseDto.class)
-        .value(dto -> {
-          var pvpDto = dto.getData();
-          assertThat(pvpDto.getPvp()).isEqualTo(35.50);
-          // TODO complete validations
-        });
+        .value(dto -> assertThat(dto.getData().getPvp()).isEqualTo(35.50));
   }
 
   @Test
@@ -51,11 +39,7 @@ class GetPvpEndpointIT extends BaseRestIT {
     makeGetPvpEndpointCall(BRAND_ID, PRODUCT_ID, offsetDateTime(DATE_2020_06_15, TIME_10_00))
         .expectStatus().isOk()
         .expectBody(GetPvp200ResponseDto.class)
-        .value(dto -> {
-          var pvpDto = dto.getData();
-          assertThat(pvpDto.getPvp()).isEqualTo(30.50);
-          // TODO complete validations
-        });
+        .value(dto -> assertThat(dto.getData().getPvp()).isEqualTo(30.50));
   }
 
   @Test
@@ -63,11 +47,7 @@ class GetPvpEndpointIT extends BaseRestIT {
     makeGetPvpEndpointCall(BRAND_ID, PRODUCT_ID, offsetDateTime(DATE_2020_06_16, TIME_21_00))
         .expectStatus().isOk()
         .expectBody(GetPvp200ResponseDto.class)
-        .value(dto -> {
-          var pvpDto = dto.getData();
-          assertThat(pvpDto.getPvp()).isEqualTo(38.95);
-          // TODO complete validations
-        });
+        .value(dto -> assertThat(dto.getData().getPvp()).isEqualTo(38.95));
   }
 
   @Test
