@@ -1,37 +1,86 @@
 package com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.route;
 
+import com.diegosaldiaz.inditex.pvp.infrastructure.inbound.dto.GetPvp200ResponseDto;
+import com.diegosaldiaz.inditex.pvp.reactive.application.port.inbound.GetPvpUseCasePort;
+import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.exception.ValidationException;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.handler.PvpHandler;
+import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.mapper.PriceDomainModelToDtoMapper;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.validation.DateValidation;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.validation.NoNegativeIntegerValidation;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import java.time.LocalDateTime;
+import reactor.core.publisher.Mono;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpMethod;
-import org.springframework.web.reactive.function.server.ServerRequest;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {PvpRouter.class, PvpHandler.class})
+@WebFluxTest
 class PvpRouterTest {
 
+  private static final LocalDateTime DATE = LocalDateTime.of(2020,1,2,3,4,5);
+  private static final int BRAND_ID = 1;
+  private static final long PRODUCT_ID = 2L;
+
+  @Autowired
+  private ApplicationContext context;
+
+  @MockBean(name="getPvpUseCasePort")
+  private GetPvpUseCasePort getPvpPort;
+
+  @MockBean(name="piceDomainModelToDtoMapper")
+  private PriceDomainModelToDtoMapper mapper;
+
+  @MockBean(name="noNegativeIntegerValidation")
+  private NoNegativeIntegerValidation noNegativeIntegerValidation;
+
+  @MockBean(name="dateValidation")
+  private DateValidation dateValidation;
+
+  private WebTestClient testClient;
+
+  @BeforeEach
+  public void setUp() {
+    testClient = WebTestClient.bindToApplicationContext(context).build();
+  }
+
   @Test
-  void testRoute() {
-    var mockHandler = mock(PvpHandler.class);
-    var mockIntValidator = mock(NoNegativeIntegerValidation.class);
-    var mockDateValidator = mock(DateValidation.class);
-    var routerFunction = new PvpRouter(mockIntValidator, mockDateValidator).route(mockHandler);
+  void testRouter() {
+    Mockito.when(getPvpPort.apply(BRAND_ID, PRODUCT_ID, DATE)).thenReturn(Mono.empty());
 
-    // Set up a mock request
-    ServerRequest request = mock(ServerRequest.class);
-    when(request.method()).thenReturn(HttpMethod.GET);
-    when(request.path()).thenReturn("/brands/1/products/2/prices/pvp");
+    testClient
+        .get().uri("/brands/1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .exchange()
+        .expectStatus()
+        .isOk()
+        .expectBody(GetPvp200ResponseDto.class);
 
-    // Call the router function
-    routerFunction.route(request).subscribe();
+    Mockito.verify(getPvpPort, Mockito.times(1)).apply(BRAND_ID, PRODUCT_ID, DATE);
+  }
 
-    // Verify that the correct method on the mock handler was called
-    verify(mockHandler).get(request);
+  @Test
+  void testRouterFilterFail() {
+    Mockito.doThrow(ValidationException.class).when(noNegativeIntegerValidation).accept(anyString(), anyString());
+    testClient
+        .get().uri("/brands/-1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        .exchange();
+    Mockito.verify(getPvpPort, Mockito.never()).apply(anyInt(), anyLong(), any(LocalDateTime.class));
   }
 
 }

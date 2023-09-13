@@ -177,7 +177,6 @@
                     <version>2.22.2</version> <!-- TODO -->
                     <configuration>
                         <testFailureIgnore>false</testFailureIgnore>
-                        <argLine>--add-opens java.base/java.time=ALL-UNNAMED</argLine> <!-- Avoid OpenPOJO issue with LocalDateTime type -->
                     </configuration>
                 </plugin>
 
@@ -249,6 +248,7 @@
                                         </limits>
                                         <excludes>
                                             <exclude>**.config.*</exclude>
+                                            <exclude>**.error.*</exclude>
                                             <exclude>**.*MapperImpl</exclude>
                                         </excludes>
                                     </rule>

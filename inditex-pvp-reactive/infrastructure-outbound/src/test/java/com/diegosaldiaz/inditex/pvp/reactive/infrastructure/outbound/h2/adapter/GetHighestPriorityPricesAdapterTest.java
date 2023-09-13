@@ -7,7 +7,6 @@ import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.outbound.h2.reposito
 import java.time.LocalDateTime;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
