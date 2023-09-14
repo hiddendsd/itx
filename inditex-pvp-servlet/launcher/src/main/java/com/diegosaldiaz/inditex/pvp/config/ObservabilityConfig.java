@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * TODO.
+ * Observability Configuration.
  */
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
@@ -16,7 +16,10 @@ public class ObservabilityConfig {
   private final ObservationLogsHandler handler;
 
   /**
-   * TODO.
+   * Creates the ObservedAspect Bean.
+   *
+   * @param observationRegistry ObservationRegistry
+   * @return ObserverAspect
    */
   @Bean
   ObservedAspect observedAspect(ObservationRegistry observationRegistry) {

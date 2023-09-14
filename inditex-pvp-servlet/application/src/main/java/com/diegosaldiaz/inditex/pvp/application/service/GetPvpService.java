@@ -5,6 +5,7 @@ import com.diegosaldiaz.inditex.pvp.application.exception.PriceNotFoundException
 import com.diegosaldiaz.inditex.pvp.application.exception.PriorityCollisionException;
 import com.diegosaldiaz.inditex.pvp.application.port.inbound.GetPvpUseCasePort;
 import com.diegosaldiaz.inditex.pvp.application.port.outbound.GetHighestPriorityPricesPort;
+import io.micrometer.observation.annotation.Observed;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,9 @@ public class GetPvpService implements GetPvpUseCasePort {
    * @throws PriorityCollisionException when there are more than one price sharing the max priority (for the input conditions).
    */
   @Override
+  @Observed(name = "pvp.service",
+      contextualName = "getting-pvp",
+      lowCardinalityKeyValues = {"service.type", "servlet"})
   public Price apply(final int brandId, final long productId, final LocalDateTime date) {
     return getPvpPort.apply(brandId, productId, date)
         .collect(

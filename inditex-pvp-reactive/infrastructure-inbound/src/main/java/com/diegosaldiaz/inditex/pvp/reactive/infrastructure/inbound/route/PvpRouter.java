@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 /**
- * TODO.
+ * PVP endpoints router.
  */
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
@@ -26,7 +26,10 @@ public class PvpRouter {
   private final DateValidation dateValidation;
 
   /**
-   * TODO.
+   * Route endpoints.
+   *
+   * @param pvpHandler PvpHandler
+   * @return handler response
    */
   @Bean
   public RouterFunction<ServerResponse> route(PvpHandler pvpHandler) {

@@ -25,11 +25,11 @@ public class InditexPvpReactiveException extends RuntimeException {
   }
 
   /**
-   * TODO.
+   * Constructor.
    *
-   * @param code TODO
-   * @param message TODO
-   * @param retryable TODO
+   * @param code String
+   * @param message String
+   * @param retryable boolean
    */
   public InditexPvpReactiveException(String code, String message, boolean retryable) {
     super(message);

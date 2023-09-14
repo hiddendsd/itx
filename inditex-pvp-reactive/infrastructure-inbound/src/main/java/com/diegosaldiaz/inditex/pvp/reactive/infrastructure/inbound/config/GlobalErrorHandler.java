@@ -22,7 +22,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 /**
- * TODO.
+ * Global Error Handler.
  */
 @Component
 @Order(-2)
@@ -30,10 +30,14 @@ import reactor.core.publisher.Mono;
 public class GlobalErrorHandler extends AbstractErrorWebExceptionHandler {
 
   /**
-   * TODO.
+   * Constructor.
+   *
+   * @param globalErrorAttributes GlobalErrorAttributes
+   * @param applicationContext ApplicationContext
+   * @param serverCodecConfigurer ServerCodecConfigurer
    */
   public GlobalErrorHandler(GlobalErrorAttributes globalErrorAttributes, ApplicationContext applicationContext,
-                                        ServerCodecConfigurer serverCodecConfigurer) {
+                            ServerCodecConfigurer serverCodecConfigurer) {
     super(globalErrorAttributes, new WebProperties.Resources(), applicationContext);
     super.setMessageWriters(serverCodecConfigurer.getWriters());
     super.setMessageReaders(serverCodecConfigurer.getReaders());

@@ -7,6 +7,7 @@ import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.handler.PvpH
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.mapper.PriceDomainModelToDtoMapper;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.validation.DateValidation;
 import com.diegosaldiaz.inditex.pvp.reactive.infrastructure.inbound.validation.NoNegativeIntegerValidation;
+import io.micrometer.observation.ObservationRegistry;
 import java.time.Instant;
 import reactor.core.publisher.Mono;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,6 +37,9 @@ class PvpRouterTest {
   private static final int BRAND_ID = 1;
   private static final long PRODUCT_ID = 2L;
 
+  @MockBean(name="observationRegistry")
+  private ObservationRegistry registry;
+
   @Autowired
   private ApplicationContext context;
 
@@ -61,7 +65,7 @@ class PvpRouterTest {
   @Test
   void testRouter() {
     Mockito.when(getPvpPort.apply(BRAND_ID, PRODUCT_ID, DATE)).thenReturn(Mono.empty());
-
+    Mockito.when(registry.observationConfig()).thenReturn(new ObservationRegistry.ObservationConfig());
     testClient
         .get().uri("/pvp-api/v1/brands/1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)

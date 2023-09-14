@@ -1,12 +1,7 @@
 spring:
-#  flyway:
-#    locations: /db/migrations/common,/db/migrations/test
   r2dbc:
-    # url: ${R2DBC_URI}
-    url: r2dbc:h2:file:///./tmp/inditexIT
-
+    url: r2dbc:h2:mem:///inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
   flyway:
-    # url: ${JDBC_URI}
-    url: jdbc:h2:file:./tmp/inditexIT
+    url: jdbc:h2:mem:inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
     baseline-on-migrate: true
     locations: /db/migrations/common,/db/migrations/test

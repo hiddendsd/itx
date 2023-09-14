@@ -11,6 +11,7 @@ Based on the standard specification, this module will auto-generate the related 
     ├── /rest                        # OpenAPI specs folder
     │    └── pvp.yml                 # PVP Api specification
     └── README.md
+    └── CONTRIBUTORS.md
 
 
 ## Rest APIs
@@ -21,7 +22,7 @@ Additional information about the rest api specs defined in this module.
 
 This API has just one endpoint to **_get a product PVP for a given brand in a given date_**:
 
-    GET /brands/{brandId}/products/{productId}/prices/pvp?date=2023-09-09T12:22:00Z
+    GET /pvp-api/v1/brands/{brandId}/products/{productId}/prices/pvp?date=2023-09-09T12:22:00Z
 
 #### Alternatives
 
@@ -66,3 +67,31 @@ tag.
   Note: This is done because there is only one field in the whole openapi defined as double, which is the price and 
   BigDecimal is the recommended data type to manage currencies in Java.
   In a more real situation, where there might be more double fields others than currencies, this configuration might not been applied.
+
+### API Implementation
+
+The project implementing/consuming this API must include the following dependency, which contains the Controller Interface and the
+DTOs:
+
+Maven:
+
+```
+<dependency>
+    <groupId>com.diegosaldiaz.inditex.pvp</groupId>
+    <artifactId>spec</artifactId>
+    <version>${version}</version>
+</dependency>
+```
+
+Gradle:
+
+```
+compile group: 'com.diegosaldiaz.inditex.pvp', name: 'spec', version: '${version}'
+```
+
+## Contributions
+
+[CONTRIBUTORS.md](CONTRIBUTORS.md) is a **mandatory** reading for anyone planning to contribute to the PVP Api
+specification.
+
+Please, read it carefully. 

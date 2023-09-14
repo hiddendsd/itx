@@ -4,6 +4,7 @@ import brave.Span;
 import brave.Tracer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.server.WebFilter;
 
 /**
@@ -11,8 +12,8 @@ import org.springframework.web.server.WebFilter;
  * Adds the trace id as an output header.
  */
 @Configuration(proxyBeanMethods = false)
+@Profile("!test")
 public class TracerConfiguration {
-  private static final String TRACE_ID_HEADER = "x-trace-id";
 
   @Bean
   WebFilter traceIdInResponseFilter(Tracer tracer) {
@@ -20,7 +21,7 @@ public class TracerConfiguration {
       Span currentSpan = tracer.currentSpan();
       if (currentSpan != null) {
         // putting trace id value in [traceId] response header
-        exchange.getResponse().getHeaders().add(TRACE_ID_HEADER, currentSpan.context().traceIdString());
+        exchange.getResponse().getHeaders().add("traceId", currentSpan.context().traceIdString());
       }
       return chain.filter(exchange);
     };

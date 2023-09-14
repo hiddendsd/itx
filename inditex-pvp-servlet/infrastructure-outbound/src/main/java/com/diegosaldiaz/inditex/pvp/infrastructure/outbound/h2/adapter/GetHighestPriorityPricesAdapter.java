@@ -10,7 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
- * TODO.
+ * GetHighestPriorityPricesAdapter.
+ * Returns the list of Prices matching the input criteria (brandId, productId and date)
  */
 @Service
 @RequiredArgsConstructor

@@ -14,7 +14,7 @@ spring:
   flyway:
     url: ${JDBC_URI}
     baseline-on-migrate: true
-    locations: classpath:/db/migrations/common,classpath:/db/migrations/${ENV:pro}
+    locations: classpath:/db/migrations/common,classpath:/db/migrations/${ENV:local}
 
 management:
   tracing:

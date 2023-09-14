@@ -61,10 +61,11 @@ Nuestro servicio es el encargado de devolver el PVP, de modo que si ese caso ocu
 
 Se controla si la bbdd tiene más de un precio con la prioridad máxima para los criterios de entrada, y si es así, devuelve un error 409 (Conflicto)
 
+_(Nota: Se han insertado registros en la bbdd para poder probar la colisión. Cualquier solicitud realizada para los mismos brandId y productId con fecha `2021-06-15` a cualquier hora, debe retornar un Conflicto)_
+
 #### Caso Real
 
 En un caso real se validaría con negocio si existe algún criterio de desambiguación adicional (por ejemplo, en caso de conflicto, quedarse con el último actualizado).
-
 
 ### Filtrado de precios
 
@@ -78,7 +79,6 @@ Implica:
 - en función de la volumetría de los datos, un indice del campo prioridad ordenado descendentemente haría la búsqueda más eficiente aún.
 - devuelve SOLO los registros que tienen prioridad máxima.
 
-
 #### En Código
 
 Implica:
@@ -87,13 +87,12 @@ Implica:
 -- Aumenta el tráfico de red, ya que devuelve todos y no solo los definitivos. (Si el numero de registros que cumplen los criterios de entrada fuese muy grande, este punto tomaría más relevancia. Pero dado el caso de uso aparentemente no debería ser así.)
 - El código se encarga de buscar los de mayor prioridad.
 
-
 #### Decisión
 
 - El filtrado se realiza en la bbdd y devuelve los registros con max prioridad:
 -- 0 -> El API devuelve un 404 Not Found
 -- 1 -> El API lo devuelve
--- >1 --> El API devuelve un 409 Conflict
+-- >1 --> El API devuelve un 409 Conflict 
 
 #### Caso Real
 
@@ -123,3 +122,148 @@ prices.collect(
 );
 ```
 
+## Directrices generales
+
+### API First
+
+El proyecto ha sido generando siguiendo la metodología API First:
+Primero se ha definido la [especificación del API](./inditex-pvp-servlet/spec/rest/pvp.yml) en formato estandarizado OpenAPI 3.
+A partir de esta especificación, se ha autogenerado los DTOs y los Interfaces Servlet.
+
+- ver [README.md](./inditex-pvp-servlet/spec/README.md) para ampliar información sobre la estructura del módulo con las especificaciones.
+- Ver [CONTRIBUTORS.md](./inditex-pvp-servlet/spec/CONTRIBUTORS.md) para ampliar información sobre los criterios seguidos a la hora de diseñar el api.
+
+### Arquitectura Hexagonal
+
+La Arquitectura Hexagonal propone que nuestro dominio sea el núcleo de las capas y que este no se acople a nada externo. En lugar de hacer uso explícito y mediante el principio de inversión de dependencias nos acoplamos a contratos (interfaces o puertos) y no a implementaciones concretas.
+
+![Hexagonal Architecture](readme-resources/hexagonal_arch.png "Architecture Approach")
+
+### Proyectos multimódulo
+
+Ambos proyectos siguen una estructura maven multi-módulo con la siguiente estructura:
+
+![Hexagonal Architecture](readme-resources/modules_dependencies.png "Modules Dependencies")
+
+- `spec`: Módulo sin código que recoge las especificaciones formales de las apis del servicio. En este caso utiliza OpenAPI para la especificación del endpoint REST. (Aquí también se incluirían los AsyncAPI, los esquemas Avro...).
+  
+  Desde este módulo se autogenera el código con los DTOs y los interfaces de los controladores.
+
+  _(Este módulo solo está definido en el proyecto inditex-pvp-servlet. El proyecto inditex-pvp-reactive incluye esta dependencia, y hace uso de los DTOs autogenerados.)_
+- `infrastructure-inbound`: Módulo de infraestructura que recoge todos los adapters que implementan los puertos driving o puertos de entrada.
+- `infrastructure-outbound`: Módulo de infraestructura que recoge todos los adapters que implementan los puertos drived o puertos de salida.
+- `application`: Módulo que contiene la lógica de negocio y los objetos de dominio.
+- `launcher`: Módulo que tan solo contiene el punto de entrada de SpringBoot, así como configuraciones generales que apliquen a todos los módulos.
+  Como es el punto de entrada de SpringBoot, también es el lugar donde se define el `application.yml` así como todos los resources del proyecto.
+
+Esta estructura de proyecto nos permite:
+- Autogenerar los DTOs en un .jar que puede ser importado por los proyectos que van a consumir el API para asegurar que ambas partes utilizan los mismos objetos de intercambio con las mismas validaciones.
+  _(Este módulo solo está definido en el proyecto inditex-pvp-servlet. El proyecto inditex-pvp-reactive incluye esta dependencia, y hace uso de los DTOs autogenerados.)_
+- Obligar a que cada capa maneje sus propios objetos (dtos, entidades, dominio), de modo que se evita devolver en el API un objeto de BBDD, o utilizar un DTO como parte del dominio, etc: Capas desacompladas por diseño.
+- Evitar por diseño que desde los adapters de entrada se pueda utilizar los adapters de salida. La única opción que tiene cualquier entrada es pasar obligatoriamente por la capa de aplicación (Lógica de negocio).
+  Con esto se evita por diseño que por ejemplo en un Controller se inyecte la dependencia de un Repository y se interactue directamente con la bbdd sin pasar por los casos de uso.
+- Tener un punto común (launcher) que tiene visibilitad de todos los módulos, lo que permite ubicar en él todos los test de integración.
+- Facilita exponer módulos del proyecto como dependencias a utilizar por otros proyectos. Por ejemplo, si se requiere un SharedKernel.
+
+La arquitectura hexagonal queda adaptada a nuestro caso de uso:
+
+![Hexagonal Multimodulo](readme-resources/hexagonal_applied.png "Hexagonal Arch applied to multimodule project")
+
+### Calidad
+
+El build de ambos proyectos tiene integrado:
+
+- Checkstyle
+- PMD
+- Bugspot
+
+Cualquier warning de cualquier analizador hace el build fallar.
+Se han utilizado las reglas por defecto excepto en el tamaño máximo de línea: 140 caracteres
+
+- Los proyectos tienen configurado el fichero `sonar-project.properties` para su integración con Sonar.
+
+### Test Unitarios
+
+Se ha incluido Jacoco en el build con un umbral de covertura del 100% tanto en líneas como en ramas.
+
+Las únicas exclusiones son:
+- /config
+- (...)MapperImpl (Clases autogeneradas por MapStruct).
+
+### Test de Integración
+
+Ambos proyectos tienen los test de intración requeridos en la tarea.
+- Adicionalmente, se han incluido los test de integración para validar los errores definidos en el API.
+- Adicionalmente, se han incluido test de integración para validar los casos edge relacionados con el Offset de las fechas (en el proyecto `inditex-pvp-reactive` que es el único en el que aplica).
+- Adicionalmente, se han incluido test de integración del Repositorio `PriceRepositoryIT` para validar los precios devueltos en los casos edge (Momento exácto, un instante antes, un instante posterior)
+
+### Observabilidad
+
+Ambos proyectos utilizan `micrometer`.
+
+Los `traceId` y `spanId` están incluidos en las trazas de log.
+
+Se observa el servicio `pvp.service` para poder sacar estadísticas de uso mediante el endpoint '/actuator/metrics/pvp.service'
+
+### Logs
+
+Criterio seguido para el nivel de logs:
+
+- `debug`: datos relevantes a nivel técnico
+- `info`: solo datos relevantes a nivel de negocio
+- `warn`: errores de los que el sistema se puede recuperar
+- `error`: errores de los que el sistema no se puede recuperar
+
+### Modelo de datos
+
+- Todas las columnas son obligatorias (no pueden tener valores null)
+- El número de productos es elevado. Se crea un índice por la columna `product_id`
+- El número de brands el pequeño. No se cre un índice porque aunque se utiliza en el filtrado su baja cardinalidad lo hace poco efectivo (valorar particionado por este campo).
+
+### Otros
+
+#### Cache
+
+- El endpoint se ha diseñado teniendo en cuenta que pueda ser cacheado a nivel de llamada: Todos los parámetros viajan en la URL, no depende de cabeceras ni bodies.
+- No se ha implementado la gestión de la cache, tratando de seguir el principio de responsabilidad simple.
+- Se propone realizar la gestión de la cache a nivel de API Manager, o bien siguiendo el patrón Sidecar.
+
+#### Seguridad
+
+- El ejercicio no tiene requisitos de seguridad (Oauth o similares).
+- Al igual que la cache, si se desea implementar un protocolo de seguridad, se sugiere realizarlo en el API manager o en un contenedor sidecar.
+
+## Quickstart
+
+### Precondiciones
+
+- [Maven](https://maven.apache.org) 
+- [Docker](https://www.docker.com)
+- [Docker-compose](https://docs.docker.com/compose/)
+
+### quickstart.sh
+
+- Situarse en el directorio base del entregable.
+- Ejecutar el comando
+
+```bash
+$ sh quickstart.sh
+```
+
+Este script realizará las siguientes acciones:
+- Compilación del proyecto `inditex-pvp-servlet` 
+- Construcción de la imagen docker del proyecto `inditex-pvp-servlet`
+- Compilación del proyecto `inditex-pvp-reactive`
+- Construcción de la imagen docker del proyecto `inditex-pvp-reactive`
+- Levanta dos contenedores docker, uno con cada proyecto.
+
+`inditex-pvp-servlet`:
+
+- Endpoint: http://localhost:8881/pvp-api/v1/brands/1/products/35455/prices/pvp?date=2020-06-16T20:00:00Z
+- Estadísticas de uso: http://localhost:8881/actuator/metrics/pvp.service
+
+`inditex-pvp-reactive`:
+- Endpoint: http://localhost:8882/pvp-api/v1/brands/1/products/35455/prices/pvp?date=2020-06-16T20:00:00Z
+- Estadísticas de uso: http://localhost:8882/actuator/metrics/pvp.service
+
+En este enlace se puede acceder al [Swagger UI](http://localhost:8881/swagger-ui/index.html) del proyecto.

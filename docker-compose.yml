@@ -7,7 +7,6 @@ services:
     environment:
       ENV: local
       DB_URI: jdbc:h2:mem:inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
-      LOG_LEVEL_ITX_PVP: debug
 
   inditex-pvp-reactive:
     image: inditex-pvp-reactive:0.0.1-SNAPSHOT
@@ -17,4 +16,3 @@ services:
       ENV: local
       R2DBC_URI: r2dbc:h2:mem:///inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
       JDBC_URI: jdbc:h2:mem:inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
-      LOG_LEVEL_ITX_PVP: debug

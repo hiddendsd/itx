@@ -18,7 +18,7 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * TODO.
+ * GlobalErrorAttributes.
  */
 @Component
 public class GlobalErrorAttributes extends DefaultErrorAttributes {

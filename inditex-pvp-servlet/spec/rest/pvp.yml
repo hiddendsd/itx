@@ -5,6 +5,8 @@ info:
   contact:
     email: info@diegosaldiaz.com
   version: 1.0.0
+  x-api-id: d0184f38-b98d-11e7-9c56-68f728c1ba70
+  x-audience: company-internal
 servers:
   - url: https://localhost:8881
 tags:

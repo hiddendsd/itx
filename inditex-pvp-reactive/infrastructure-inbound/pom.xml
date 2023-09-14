@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.diegosaldiaz.inditex.pvp</groupId>
             <artifactId>spec</artifactId>
-            <version>0.0.1-SNAPSHOT</version> <!-- TODO -->
+            <version>${spec.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
@@ -67,9 +67,6 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <!-- use 2.9.1 for Java 7 projects -->
-            <version>3.11.1</version> <!-- TODO quitar de aqui y mover a POM padre-->
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -81,6 +78,16 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing-bridge-brave</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core-micrometer</artifactId>
         </dependency>
     </dependencies>
 

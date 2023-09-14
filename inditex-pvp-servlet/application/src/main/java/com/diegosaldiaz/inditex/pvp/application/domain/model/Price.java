@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
  * @param priceListId long with the PriceList identifier
  * @param priority int with the priority for the given price
  * @param price BigDecimal with the amount of money
- * @param currency String with the currency
+ * @param currency String with the currency.
+ *
+ * @implNote Not using an Enum for the currency as any future price in a new currency will cause the need of writing new code and re-deploy
  */
 public record Price(int brandId, long productId, LocalDateTime validFrom, LocalDateTime validTo, long priceListId, int priority,
                     BigDecimal price, String currency) {
-
 }
-// TODO explicar por qué no un enum con las monedas.

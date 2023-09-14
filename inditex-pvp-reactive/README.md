@@ -1,6 +1,6 @@
-# ITX-PVP-SERVLET
+# ITX-PVP-REACTIVE
 
-Micro service that gets the selling price `PVP` using servlet stack.
+Micro service that gets the selling price `PVP` using reactive stack.
 
 ## Technologies
 
@@ -8,7 +8,9 @@ The project has the following technical stack:
 
 - Java 17 (As it is the last LTS version)
 - SpringBoot 3
+- WebFlux
 - H2-In-Memory (Database)
+    - R2DBC
     - Flyway (database migrations manager)
 - OpenAPI 3 (Api Spec)
 - MapStruct (Objects mapper across layers)
@@ -18,7 +20,6 @@ The project has the following technical stack:
 
 ## Modules
 
-- `spec`: OpenAPI Specifications. Auto-generated code (Dtos and Controller interfaces)
 - `infrastructure-inbound`: Driving Adapters implementation
 - `infrastructure-outbound`: Drived Adapters implementatino
 - `application`: Business Logic (Usecases) and domain objects.
@@ -59,7 +60,7 @@ It will:
 
 ## Generate docker image:
 
-AFTER running the build, in the root project folder run the following command to build the docker-image `inditex-pvp-servlet-parent:${project_version}`:
+AFTER running the build, in the root project folder run the following command to build the docker-image `inditex-pvp-reactive:${project_version}`:
 
 ```bash
 $ mvn -f launcher/pom.xml spring-boot:build-image
@@ -77,7 +78,8 @@ $ mvn spring-boot:build-image
 
 | name                       | description                               | default value | mandatory |
 |----------------------------|-------------------------------------------|---------------|-----------|
-| DB_URI                     | DB connection uri                         |               | true      |
+| R2DBC_URI                  | DB R2DBC connection uri                   |               | true      |
+| JDBC_URI                   | DB JDBC connection uri (flyway)           |               | true      |
 | ENV                        | running environment                       | local         | false     |
 | LOG_LEVEL_ITX_PVP          | Log level for the service package         | info          | false     |
 | LOG_LEVEL_SPRING_FRAMEWORK | Log level for the springframework package | info          | false     |
@@ -92,15 +94,17 @@ $ mvn -f launcher/pom.xml spring-boot:run -Dspring-boot.run.jvmArguments="-DB_UR
 You can also make a previous export of the environment variables:
 
 ```bash
-$ export DB_URI='jdbc:h2:mem:inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1'
+$ export JDBC_URI='jdbc:h2:mem:inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1'
+$ export R2DBC_URI='r2dbc:h2:mem:///inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1'
 $ mvn -f launcher/pom.xml spring-boot:run
 ```
 
 ### Run using docker
 
 ```bash
-$ docker run -p 8881:8881 
-  -e DB_URI='jdbc:h2:mem:inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1' 
-  inditex-pvp-servlet-parent:0.0.1-SNAPSHOT 
-  --name pvp-servlet
+$ docker run -p 8882:8882 
+  -e JDBC_URI='jdbc:h2:mem:inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1'
+  -e R2DBC_URI='r2dbc:h2:mem:///inditex;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1' 
+  inditex-pvp-reactive:0.0.1-SNAPSHOT 
+  --name pvp-reactive
 ```
