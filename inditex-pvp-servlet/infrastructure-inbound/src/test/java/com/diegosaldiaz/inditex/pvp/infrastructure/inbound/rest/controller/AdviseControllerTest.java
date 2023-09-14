@@ -21,6 +21,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class AdviseControllerTest {
 
+  private static final String MSG = "msg";
   @Mock
   private WebRequest webRequest;
 
@@ -125,5 +127,33 @@ class AdviseControllerTest {
     assertThat(errorDto.getMessage()).isEqualTo(msg);
     assertThat(errorDto.getCode()).isEqualTo("V-002");
     assertThat(errorDto.getRetryable()).isFalse();
+  }
+
+  @Test
+  void testMethodArgumentTypeMismatchException() {
+    var ex = mock(MethodArgumentTypeMismatchException.class);
+    when(ex.getMessage()).thenReturn(MSG);
+    ResponseEntity<ErrorDto> response = controller.handleMethodArgumentTypeMismatchException(ex, webRequest);
+
+    var errorDto =response.getBody();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    assertThat(errorDto.getMessage()).isEqualTo(MSG);
+    assertThat(errorDto.getCode()).isEqualTo("V-004");
+    assertThat(errorDto.getRetryable()).isFalse();
+  }
+
+  @Test
+  void testUnexpectedError() {
+    var ex = mock(Throwable.class);
+    when(ex.getMessage()).thenReturn(MSG);
+    ResponseEntity<ErrorDto> response = controller.handleThrowable(ex, webRequest);
+
+    var errorDto =response.getBody();
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    assertThat(errorDto.getMessage()).isEqualTo("Unexpected error");
+    assertThat(errorDto.getCode()).isEqualTo("X-001");
+    assertThat(errorDto.getRetryable()).isTrue();
   }
 }

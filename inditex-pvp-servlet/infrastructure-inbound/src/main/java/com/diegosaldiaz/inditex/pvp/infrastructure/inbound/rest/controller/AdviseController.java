@@ -13,6 +13,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * Centralized management of API Error responses.
@@ -24,6 +25,9 @@ public class AdviseController {
   private static final String ERROR_CONSTRAINT_VIOLATION = "V-001";
   private static final String ERROR_MISSING_PARAMETER = "V-002";
   private static final String ERROR_ARGUMENT_NOT_VALID = "V-003";
+  private static final String ERROR_WRONG_TYPE = "V-004";
+
+  private static final String ERROR_UNEXPECTED = "X-001";
 
 
   /**
@@ -31,7 +35,7 @@ public class AdviseController {
    *
    * @param ex NotImplementedException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto and NOT_FOUND status
+   * @return ResponseEntity with retryable ErrorDto and NOT_FOUND status
    */
   @ExceptionHandler(PriceNotFoundException.class)
   public final ResponseEntity<ErrorDto> handlePriceNotFound(PriceNotFoundException ex, WebRequest req) {
@@ -47,7 +51,7 @@ public class AdviseController {
    *
    * @param ex PriorityCollisionException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto and CONFLICT status
+   * @return ResponseEntity with retryable ErrorDto and CONFLICT status
    */
   @ExceptionHandler(PriorityCollisionException.class)
   public final ResponseEntity<ErrorDto> handlePriorityCollision(PriorityCollisionException ex, WebRequest req) {
@@ -63,7 +67,7 @@ public class AdviseController {
    *
    * @param ex MethodArgumentNotValidException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto and BAD_REQUEST
+   * @return ResponseEntity with no retryable ErrorDto and BAD_REQUEST
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public final ResponseEntity<ErrorDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, WebRequest req) {
@@ -85,7 +89,7 @@ public class AdviseController {
    *
    * @param ex ConstraintViolationException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto and BAD_REQUEST
+   * @return ResponseEntity with no retryable ErrorDto and BAD_REQUEST
    */
   @ExceptionHandler(ConstraintViolationException.class)
   public final ResponseEntity<ErrorDto> handleConstraintViolationException(ConstraintViolationException ex, WebRequest req) {
@@ -104,7 +108,7 @@ public class AdviseController {
    *
    * @param ex MissingServletRequestParameterException raised
    * @param req WebRequest causing the exception
-   * @return ResponseEntity with ErrorDto and BAD_REQUEST
+   * @return ResponseEntity with no retryable ErrorDto and BAD_REQUEST
    */
   @ExceptionHandler(MissingServletRequestParameterException.class)
   public final ResponseEntity<ErrorDto> handleConstraintViolationException(MissingServletRequestParameterException ex, WebRequest req) {
@@ -112,6 +116,38 @@ public class AdviseController {
     var errorDto = newErrorDto(ex.getBody().getDetail(), ERROR_MISSING_PARAMETER, false);
     return ResponseEntity
         .status(HttpStatus.BAD_REQUEST)
+        .body(errorDto);
+  }
+
+  /**
+   * Handle response when a MethodArgumentTypeMismatchException has been raised at any point.
+   *
+   * @param ex MethodArgumentTypeMismatchException raised
+   * @param req WebRequest causing the exception
+   * @return ResponseEntity with no retryable ErrorDto and BAD_REQUEST
+   */
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public final ResponseEntity<ErrorDto> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest req) {
+    logWarn("Bad Type", ex, req);
+    var errorDto = newErrorDto(ex.getMessage(), ERROR_WRONG_TYPE, false);
+    return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(errorDto);
+  }
+
+  /**
+   * Handle response when an unexpected exception has been raised at any point.
+   *
+   * @param ex Throwable raised
+   * @param req WebRequest causing the exception
+   * @return ResponseEntity with retryable ErrorDto and INTERNAL_SERVER_ERROR
+   */
+  @ExceptionHandler(Throwable.class)
+  public final ResponseEntity<ErrorDto> handleThrowable(Throwable ex, WebRequest req) {
+    logWarn("Unexpected", ex, req);
+    var errorDto = newErrorDto("Unexpected error", ERROR_UNEXPECTED, true);
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body(errorDto);
   }
 

@@ -75,6 +75,50 @@ class GetPvpEndpointIT extends BaseRestIT {
   }
 
   @Test
+  void testBadBrandParam() {
+    makeGetPvpEndpointCall(-1, PRODUCT_ID, offsetDateTime(DATE_2020_06_14, TIME_10_00))
+        .expectStatus().isBadRequest()
+        .expectBody(ErrorDto.class)
+        .value(dto -> {
+          assertThat(dto.getCode()).isEqualTo("V-001");
+          assertThat(dto.getRetryable()).isFalse();
+        });
+  }
+
+  @Test
+  void testBadProductParam() {
+    makeGetPvpEndpointCall(BRAND_ID, -1, offsetDateTime(DATE_2020_06_14, TIME_10_00))
+        .expectStatus().isBadRequest()
+        .expectBody(ErrorDto.class)
+        .value(dto -> {
+          assertThat(dto.getCode()).isEqualTo("V-001");
+          assertThat(dto.getRetryable()).isFalse();
+        });
+  }
+
+  @Test
+  void testMissingDateParam() {
+    makeGetPvpEndpointCall(BRAND_ID, -1, "")
+        .expectStatus().isBadRequest()
+        .expectBody(ErrorDto.class)
+        .value(dto -> {
+          assertThat(dto.getCode()).isEqualTo("V-002");
+          assertThat(dto.getRetryable()).isFalse();
+        });
+  }
+
+  @Test
+  void testWrongDateParam() {
+    makeGetPvpEndpointCall(BRAND_ID, -1, "s")
+        .expectStatus().isBadRequest()
+        .expectBody(ErrorDto.class)
+        .value(dto -> {
+          assertThat(dto.getCode()).isEqualTo("V-004");
+          assertThat(dto.getRetryable()).isFalse();
+        });
+  }
+
+  @Test
   void testWrongEndpoint() {
     webTestClient
         .method(HttpMethod.GET)
