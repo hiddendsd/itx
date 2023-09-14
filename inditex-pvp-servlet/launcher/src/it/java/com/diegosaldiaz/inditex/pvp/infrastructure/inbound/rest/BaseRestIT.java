@@ -29,12 +29,16 @@ public class BaseRestIT extends BaseIT {
   protected WebTestClient webTestClient;
 
   protected WebTestClient.ResponseSpec makeGetPvpEndpointCall(int brandId, long productId, OffsetDateTime date) {
+    return makeGetPvpEndpointCall(brandId, productId, date.toString());
+  }
+
+  protected WebTestClient.ResponseSpec makeGetPvpEndpointCall(int brandId, long productId, String date) {
     return webTestClient
         .method(HttpMethod.GET)
         .uri(uriBuilder ->
-                uriBuilder.path(String.format(PVP_PATH, brandId, productId))
-                    .queryParam("date", date.toString())
-                    .build()
+            uriBuilder.path(String.format(PVP_PATH, brandId, productId))
+                .queryParam("date", date)
+                .build()
         )
         .accept(MediaType.APPLICATION_JSON)
         .exchange();
