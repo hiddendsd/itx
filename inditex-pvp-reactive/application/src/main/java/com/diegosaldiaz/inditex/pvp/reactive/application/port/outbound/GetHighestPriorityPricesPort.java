@@ -7,10 +7,10 @@ import reactor.core.publisher.Flux;
 /**
  * Get Highest Priority Price.
  * Outbound Port.
- * Returns the Price with highest Priority along all prices matching the input conditions.
+ * Returns the Price with the highest Priority along all prices matching the input conditions.
  */
 @FunctionalInterface
 public interface GetHighestPriorityPricesPort {
 
-  Flux<Price> apply(int brandId, long productId, Instant date);
+  Flux<Price> query(int brandId, long productId, Instant date);
 }

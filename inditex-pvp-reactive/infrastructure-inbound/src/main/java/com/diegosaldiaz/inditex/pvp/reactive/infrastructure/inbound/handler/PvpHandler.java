@@ -37,7 +37,7 @@ public class PvpHandler {
         .orElseThrow(() -> new ValidationException("Missing mandatory query field 'date'", false)))
         .toInstant();
 
-    return getPvpPort.apply(brandId, productId, date)
+    return getPvpPort.query(brandId, productId, date)
         .map(mapper::toDto)
         .map(data -> GetPvp200ResponseDto.builder().data(data).build())
         .doOnNext(pvp -> log.info("PVP {} for request brandId[{}] brandId[{}] brandId[{}]", pvp, brandId, productId, date))

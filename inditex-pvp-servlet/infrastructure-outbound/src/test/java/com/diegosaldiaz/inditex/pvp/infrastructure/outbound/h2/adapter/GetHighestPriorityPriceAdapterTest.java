@@ -40,7 +40,7 @@ class GetHighestPriorityPriceAdapterTest {
     Mockito.when(mapper.map(priceEntity))
         .thenReturn(expectedPrice);
 
-    var result = adapter.apply(BRAND_ID, PRODUCT_ID, DATE);
+    var result = adapter.query(BRAND_ID, PRODUCT_ID, DATE);
 
     var prices = result.toList(); // As a steam can only be consumed once... and we want to make more than one assertion
     assertThat(prices.size()).isOne();
@@ -52,7 +52,7 @@ class GetHighestPriorityPriceAdapterTest {
     Mockito.when(priceRepository.searchHigherPriorityPrices(BRAND_ID, PRODUCT_ID, DATE))
         .thenReturn(List.of());
 
-    var result = adapter.apply(BRAND_ID, PRODUCT_ID, DATE);
+    var result = adapter.query(BRAND_ID, PRODUCT_ID, DATE);
 
     assertThat(result).isEmpty();
     Mockito.verify(mapper, Mockito.never()).map(any(PriceEntity.class));

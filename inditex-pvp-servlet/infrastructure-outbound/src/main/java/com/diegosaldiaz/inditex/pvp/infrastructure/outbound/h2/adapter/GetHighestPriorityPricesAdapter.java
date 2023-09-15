@@ -21,7 +21,7 @@ public class GetHighestPriorityPricesAdapter implements GetHighestPriorityPrices
   private final PriceEntityToDomainModelMapper toModelMapper;
 
   @Override
-  public Stream<Price> apply(final int brandId, final long productId, final LocalDateTime date) {
+  public Stream<Price> query(final int brandId, final long productId, final LocalDateTime date) {
     return priceRepository.searchHigherPriorityPrices(brandId, productId, date)
         .stream()
         .map(toModelMapper::map);

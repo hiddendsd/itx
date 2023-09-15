@@ -21,7 +21,7 @@ public class GetHighestPriorityPricesAdapter implements GetHighestPriorityPrices
   private final PriceEntityToDomainModelMapper toModelMapper;
 
   @Override
-  public Flux<Price> apply(final int brandId, final long productId, final Instant date) {
+  public Flux<Price> query(final int brandId, final long productId, final Instant date) {
     return priceRepository.searchHigherPriorityPrices(brandId, productId, date)
         .map(toModelMapper::map);
   }

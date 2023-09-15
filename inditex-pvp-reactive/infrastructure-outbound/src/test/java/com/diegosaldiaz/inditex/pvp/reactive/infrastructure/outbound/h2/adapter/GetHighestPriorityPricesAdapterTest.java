@@ -37,7 +37,7 @@ class GetHighestPriorityPricesAdapterTest {
 
     when(toModelMapper.map(entity)).thenReturn(price);
 
-    var result = adapter.apply(brandId, productId, date);
+    var result = adapter.query(brandId, productId, date);
 
     StepVerifier.create(result)
         .expectNext(price)

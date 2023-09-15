@@ -10,5 +10,5 @@ import reactor.core.publisher.Mono;
 @FunctionalInterface
 public interface GetPvpUseCasePort {
 
-  Mono<Price> apply(int brandId, long productId, Instant date);
+  Mono<Price> query(int brandId, long productId, Instant date);
 }
