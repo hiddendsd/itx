@@ -12,5 +12,5 @@ import java.util.stream.Stream;
 @FunctionalInterface
 public interface GetHighestPriorityPricesPort {
 
-  Stream<Price> apply(int brandId, long productId, LocalDateTime date);
+  Stream<Price> query(int brandId, long productId, LocalDateTime date);
 }

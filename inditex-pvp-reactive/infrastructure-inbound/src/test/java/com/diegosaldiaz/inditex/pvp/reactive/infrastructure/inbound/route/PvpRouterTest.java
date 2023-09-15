@@ -64,7 +64,7 @@ class PvpRouterTest {
 
   @Test
   void testRouter() {
-    Mockito.when(getPvpPort.apply(BRAND_ID, PRODUCT_ID, DATE)).thenReturn(Mono.empty());
+    Mockito.when(getPvpPort.query(BRAND_ID, PRODUCT_ID, DATE)).thenReturn(Mono.empty());
     Mockito.when(registry.observationConfig()).thenReturn(new ObservationRegistry.ObservationConfig());
     testClient
         .get().uri("/pvp-api/v1/brands/1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
@@ -74,7 +74,7 @@ class PvpRouterTest {
         .isOk()
         .expectBody(GetPvp200ResponseDto.class);
 
-    Mockito.verify(getPvpPort, Mockito.times(1)).apply(BRAND_ID, PRODUCT_ID, DATE);
+    Mockito.verify(getPvpPort, Mockito.times(1)).query(BRAND_ID, PRODUCT_ID, DATE);
   }
 
   @Test
@@ -84,7 +84,7 @@ class PvpRouterTest {
         .get().uri("/pvp-api/v1/brands/-1/products/2/prices/pvp?date=2020-01-02T03:04:05Z")
         .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         .exchange();
-    Mockito.verify(getPvpPort, Mockito.never()).apply(anyInt(), anyLong(), any(Instant.class));
+    Mockito.verify(getPvpPort, Mockito.never()).query(anyInt(), anyLong(), any(Instant.class));
   }
 
 }

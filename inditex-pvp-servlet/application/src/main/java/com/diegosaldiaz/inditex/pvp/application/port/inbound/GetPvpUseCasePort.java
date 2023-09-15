@@ -9,5 +9,5 @@ import java.time.LocalDateTime;
 @FunctionalInterface
 public interface GetPvpUseCasePort {
 
-  Price apply(int brandId, long productId, LocalDateTime date);
+  Price query(int brandId, long productId, LocalDateTime date);
 }

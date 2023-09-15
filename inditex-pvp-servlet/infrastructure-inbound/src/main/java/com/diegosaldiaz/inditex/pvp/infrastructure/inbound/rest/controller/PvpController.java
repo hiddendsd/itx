@@ -23,7 +23,7 @@ public class PvpController implements PvpApi {
 
   @Override
   public ResponseEntity<GetPvp200ResponseDto> getPvp(final Integer brandId, final Long productId, final OffsetDateTime date) {
-    var pvp = getPvpPort.apply(brandId, productId, date.toLocalDateTime());
+    var pvp = getPvpPort.query(brandId, productId, date.toLocalDateTime());
     var dto = priceMapper.toDto(pvp, date.getOffset());
     var body = GetPvp200ResponseDto.builder()
         .data(dto)

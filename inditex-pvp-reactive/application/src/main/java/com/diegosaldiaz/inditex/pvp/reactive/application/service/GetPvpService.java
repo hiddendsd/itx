@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class GetPvpService implements GetPvpUseCasePort {
 
-  private final GetHighestPriorityPricesPort getPvpPort;
+  private final GetHighestPriorityPricesPort getHighestPriorityPricesPort;
 
   /**
    * Returns the PVP price for a given product of a given brand in a given date.
@@ -35,8 +35,8 @@ public class GetPvpService implements GetPvpUseCasePort {
    * @throws PriorityCollisionException when there are more than one price sharing the max priority (for the input conditions).
    */
   @Override
-  public Mono<Price> apply(int brandId, long productId, Instant date) {
-    return getPvpPort.apply(brandId, productId, date)
+  public Mono<Price> query(int brandId, long productId, Instant date) {
+    return getHighestPriorityPricesPort.query(brandId, productId, date)
         .switchIfEmpty(Mono.error(new PriceNotFoundException(brandId, productId, date)))
         .collectList()
         .flatMap(elements ->

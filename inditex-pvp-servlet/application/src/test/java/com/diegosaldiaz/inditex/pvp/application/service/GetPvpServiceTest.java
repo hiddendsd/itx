@@ -24,7 +24,7 @@ class GetPvpServiceTest {
     var service = new GetPvpService(port);
 
     // Act
-    var result = service.apply(BRAND_ID, PRODUCT_ID, DATE);
+    var result = service.query(BRAND_ID, PRODUCT_ID, DATE);
 
     // Assert
     assertThat(result).isSameAs(expectedPrice);
@@ -37,7 +37,7 @@ class GetPvpServiceTest {
     var service = new GetPvpService(port);
 
     // Act & Assert
-    assertThatThrownBy(() -> service.apply(BRAND_ID, PRODUCT_ID, DATE))
+    assertThatThrownBy(() -> service.query(BRAND_ID, PRODUCT_ID, DATE))
         .isInstanceOf(PriceNotFoundException.class);
   }
 
@@ -51,7 +51,7 @@ class GetPvpServiceTest {
     var service = new GetPvpService(port);
 
     // Act & Assert
-    assertThatThrownBy(() -> service.apply(BRAND_ID, PRODUCT_ID, DATE))
+    assertThatThrownBy(() -> service.query(BRAND_ID, PRODUCT_ID, DATE))
         .isInstanceOf(PriorityCollisionException.class);
   }
 }

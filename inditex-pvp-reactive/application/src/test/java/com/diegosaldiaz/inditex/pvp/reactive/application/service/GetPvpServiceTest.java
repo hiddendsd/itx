@@ -32,7 +32,7 @@ class GetPvpServiceTest {
     GetHighestPriorityPricesPort port = (a, b, c) -> Flux.empty();
     var service = new GetPvpService(port);
 
-    var result = service.apply(BRAND_ID, PRODUCT_ID, DATE);
+    var result = service.query(BRAND_ID, PRODUCT_ID, DATE);
 
     StepVerifier.create(result)
         .verifyError(PriceNotFoundException.class);
@@ -46,7 +46,7 @@ class GetPvpServiceTest {
     var service = new GetPvpService(port);
 
     // Act
-    var result = service.apply(BRAND_ID, PRODUCT_ID, DATE);
+    var result = service.query(BRAND_ID, PRODUCT_ID, DATE);
 
     // Assert
     StepVerifier.create(result)
@@ -65,7 +65,7 @@ class GetPvpServiceTest {
     var service = new GetPvpService(port);
 
     // Act & Assert
-    var result = service.apply(BRAND_ID, PRODUCT_ID, DATE);
+    var result = service.query(BRAND_ID, PRODUCT_ID, DATE);
 
     StepVerifier.create(result)
         .verifyError(PriorityCollisionException.class);

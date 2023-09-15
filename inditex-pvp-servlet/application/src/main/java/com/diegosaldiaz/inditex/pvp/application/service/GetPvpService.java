@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetPvpService implements GetPvpUseCasePort {
 
-  private final GetHighestPriorityPricesPort getPvpPort;
+  private final GetHighestPriorityPricesPort getHighestPriorityPricesPort;
 
   /**
    * Returns the PVP price for a given product of a given brand in a given date.
@@ -39,8 +39,8 @@ public class GetPvpService implements GetPvpUseCasePort {
   @Observed(name = "pvp.service",
       contextualName = "getting-pvp",
       lowCardinalityKeyValues = {"service.type", "servlet"})
-  public Price apply(final int brandId, final long productId, final LocalDateTime date) {
-    return getPvpPort.apply(brandId, productId, date)
+  public Price query(final int brandId, final long productId, final LocalDateTime date) {
+    return getHighestPriorityPricesPort.query(brandId, productId, date)
         .collect(
             Collectors.collectingAndThen(
                 Collectors.toList(),

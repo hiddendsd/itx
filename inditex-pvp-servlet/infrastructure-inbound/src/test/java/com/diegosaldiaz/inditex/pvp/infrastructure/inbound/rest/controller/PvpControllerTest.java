@@ -35,7 +35,7 @@ class PvpControllerTest {
   void testGetPvp() {
     var price = mock(Price.class);
     var pvpDto = PvpDto.builder().build();
-    when(port.apply(BRAND_ID, PRODUCT_ID, DATE.toLocalDateTime())).thenReturn(price);
+    when(port.query(BRAND_ID, PRODUCT_ID, DATE.toLocalDateTime())).thenReturn(price);
     when(mapper.toDto(price, DATE.getOffset())).thenReturn(pvpDto);
 
     var result = controller.getPvp(BRAND_ID, PRODUCT_ID, DATE);
