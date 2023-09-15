@@ -42,8 +42,6 @@ public interface PriceRepository extends CrudRepository<PriceEntity, BigInteger>
           AND a.product_id = :productId
           AND a.start_date <= :date
           AND a.end_date >= :date
-        ORDER BY id;
-        
       """, nativeQuery = true)
   List<PriceEntity> searchHigherPriorityPrices(int brandId, long productId, LocalDateTime date);
 
